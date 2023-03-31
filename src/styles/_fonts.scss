@@ -1,0 +1,12 @@
+// font
+$poppins: 'Poppins';
+
+//Poppins
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../resources/fonts/Poppins-Medium.ttf') format('truetype');
+  font-display: swap;
+  font-weight: 500;
+  font-style: normal;
+}

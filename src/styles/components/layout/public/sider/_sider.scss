@@ -1,0 +1,56 @@
+:where(.css-dev-only-do-not-override-1e3x2xa).ant-layout .ant-layout-sider {
+  background-color: $color_white;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  border-right: 1px solid $color_ig_separator;
+
+  .ant-layout-sider-children {
+    .app-sider__top {
+      height: 92px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin-left: 26px;
+    }
+  }
+}
+
+.ant-layout {
+  .ant-menu {
+    .ant-menu-item {
+      height: 48px;
+      padding-top: 7px;
+
+      .ant-menu-title-content {
+        padding-left: 16px;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: $color_ig_primary_text;
+        font-weight: $font_weight_system_bold;
+        font-size: $system_16_font_size;
+        line-height: $system_16_line_height;
+        margin: -6px 0 0px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+    }
+  }
+}
+
+//Hover elements:
+:where(.css-dev-only-do-not-override-1e3x2xa).ant-menu-light:not(
+    .ant-menu-horizontal
+  )
+  .ant-menu-item:not(.ant-menu-item-selected):hover,
+:where(.css-dev-only-do-not-override-1e3x2xa).ant-menu-light
+  > .ant-menu:not(.ant-menu-horizontal)
+  .ant-menu-item:not(.ant-menu-item-selected):hover {
+  background-color: #FAFAFA;
+}
+
+:where(.css-dev-only-do-not-override-1e3x2xa).ant-menu-light .ant-menu-item-selected, :where(.css-dev-only-do-not-override-1e3x2xa).ant-menu-light>.ant-menu .ant-menu-item-selected {
+    background-color: #FAFAFA;
+}

@@ -1,0 +1,14 @@
+@import './home-reels';
+@import './home-sider';
+@import './home-main';
+
+.homepage {
+    width: calc(100% - $nav_medium_width);
+    min-height: 100vh;
+    background-color: $color_white;
+    display: flex;
+    flex-flow: row nowrap;
+    margin-left: auto;
+    align-items: stretch;
+    margin-top: 32px;
+}

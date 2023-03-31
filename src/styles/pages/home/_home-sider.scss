@@ -1,0 +1,11 @@
+.homesider {
+    position: sticky;
+    height: 100vh;
+    margin-bottom: 30px;
+    flex-shrink: 0;
+    max-width: $feed_sidebar_width;
+    right: 0;
+    width: 100%;
+    padding: 0;
+    top: 0;
+}

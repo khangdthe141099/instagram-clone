@@ -1,0 +1,125 @@
+.homemain {
+  width: 100%;
+  float: left;
+  margin-right: $feed_sidebar_padding_familiar;
+  max-width: $feed_width_wide_story;
+
+  .posts-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+
+    .post-item {
+      width: 100%;
+      max-width: 470px;
+      margin-bottom: 12px;
+      padding-bottom: 20px !important;
+      border-radius: 0;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      border-bottom: 1px solid $color_ig_separator;
+      display: flex;
+      flex-direction: column;
+
+      //TOP SECTION:
+      &--top {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        &-left {
+          width: 100%;
+          display: flex;
+          align-items: center;
+
+          .avatar {
+            margin-bottom: 6px;
+            margin-right: 12px;
+          }
+
+          h4 {
+            line-height: 18px;
+            --base-line-clamp-line-height: 18px;
+            font-size: 14px;
+            color: rbg(38, 38, 38);
+            min-width: 0;
+            word-wrap: break-word;
+            font-weight: 600;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+              Helvetica, Arial, sans-serif;
+            margin-right: 5px;
+          }
+
+          .time-post {
+            display: flex;
+            align-items: center;
+            color: #8e8e8e;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 18px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+              Helvetica, Arial, sans-serif;
+
+            span {
+              margin-right: 5px;
+            }
+          }
+        }
+
+        &-right {
+          &:hover {
+            opacity: 0.5;
+            transition: all 0.5s ease;
+          }
+        }
+      }
+
+      //BODY SECTION:
+      &--body {
+        border-radius: 4px;
+        overflow: hidden;
+        border: 1px solid rgb(239, 239, 239);
+        background-color: rgb(255, 255, 255);
+        position: relative;
+
+        .post-btn {
+          position: absolute;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 999;
+          cursor: pointer;
+          &--prev {
+            left: 10px;
+            top: 207px;
+          }
+
+          &--next {
+            right: 10px;
+            top: 207px;
+          }
+
+          .post-icon-inside {
+            background-size: 440px 411px;
+            background-image: url("/images/cdn_instagram1.png");
+            background-repeat: no-repeat;
+            width: 30px;
+            height: 30px;
+            z-index: 1000;
+            &--prev {
+              background-position: -129px -97px;
+            }
+
+            &--next {
+              background-position: -160px -97px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

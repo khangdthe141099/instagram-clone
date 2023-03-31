@@ -1,0 +1,61 @@
+// size screen responsive
+// Small devices (landscape phones, 576px and up)
+// Extra large devices (large desktops, 1200px and up)
+// Large devices (desktops, 992px and up)
+// Medium devices (tablets, 768px and up)
+
+$breakpoint_small_mobile_max: 321px;
+$breakpoint_mobile_md: 375px;
+$breakpoint_mobile_max: 575px;
+$breakpoint_tablet_max: 768px;
+$breakpoint_small_tablet_max: 1024px;
+$breakpoint_ultra_tablet_max: 1151px;
+
+$breakpoint_desktop_max: 991px;
+$breakpoint_large_desktop_max: 1279px;
+$breakpoint_xl_desktop_max: 1441px;
+$breakpoint_ultra_desktop_max: 1599px;
+$breakpoint_mega_desktop_max: 1919px;
+
+//color
+$color_white: #fff;
+$color_black: #000;
+$color_ig_primary_text: rgb(38, 38, 38);
+$color_ig_separator: rgb(219, 219, 219);
+$color_ig_primary_background: rbg(255, 255, 255);
+$ig-primary-text: rbg(38, 38, 38);
+
+
+//font-weight:
+$font_weight_system_bold: 700;
+$font_weight_system_regular: 400;
+
+//font-size:
+$system_10_line_height: 12px;
+$system_11_font_size: 11px;
+$system_11_line_height: 13px;
+$system_12_font_size: 12px;
+$system_12_line_height: 16px;
+$system_14_font_size: 14px;
+$system_14_line_height: 18px;
+$system_16_font_size: 16px;
+$system_16_line_height: 24px;
+$system_18_font_size: 18px;
+$system_18_line_height: 24px;
+$system_20_line_height: 25px;
+$system_22_font_size: 22px;
+$system_22_line_height: 26px;
+$system_24_font_size: 24px;
+$system_24_line_height: 27px;
+$system_26_font_size: 26px;
+$system_26_line_height: 28px;
+$system_28_font_size: 28px;
+$system_28_line_height: 32px;
+$system_32_font_size: 32px;
+$system_32_line_height: 40px;
+
+//width:
+$nav_medium_width: 244px;
+$feed_sidebar_padding_familiar: 64px;
+$feed_width_wide_story: 630px;
+$feed_sidebar_width: 319px;

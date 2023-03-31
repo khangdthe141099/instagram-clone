@@ -1,0 +1,103 @@
+.carousel-body {
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
+  /* overflow-y: none; */
+  height: 100px;
+  background-color: white;
+  border-radius: 8px;
+  position: relative;
+  scroll-behavior: smooth;
+  padding: 10px 0;
+}
+
+.avatar-box {
+  aspect-ratio: 1/1;
+  background-image: linear-gradient(160deg, #1d1ce5 5%, #ea047e, #ffd372);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: -8px;
+  cursor: pointer;
+}
+.avatar-profile-image {
+  border-radius: 50%;
+  margin: 3px;
+  border: 3px solid white;
+}
+.carousel-status {
+  padding: 16px 0px;
+}
+
+.carousel-body::-webkit-scrollbar {
+  display: none;
+}
+.avatar-detail:first-child {
+  margin-left: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.avatar-detail {
+  margin-right: 20px;
+  text-align: center;
+}
+.avatar-name {
+  overflow: hidden;
+  width: 60px;
+  max-width: 74px;
+  letter-spacing: 0.01em;
+  text-overflow: ellipsis;
+  color: $ig-primary-text;
+  font-weight: $font_weight_system_regular;
+  font-size: 11px;
+  line-height: $system_12_line_height;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.check {
+  position: relative;
+}
+.arrow-btn {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  cursor: pointer;
+}
+
+.icon-inside {
+    background-size: 553px 528px;
+    background-image: url('/images/cdn_instagram2.png');
+    background-repeat: no-repeat;
+    height: 45px;
+    width: 45px;
+    z-index: 1000;
+
+    &--left {
+        background-position: -291px -223px;
+    }
+
+    &--right {
+        background-position: -291px -269px;
+    }
+}
+
+.arrow-btn img {
+  width: 10px;
+  height: 10px;
+}
+.left-icon {
+  left: 10px;
+  top: 30px;
+}
+.right-icon {
+  right: 10px;
+  top: 30px;
+}
