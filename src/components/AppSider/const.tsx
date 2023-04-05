@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Image } from "antd";
 import { ROUTES } from "@/constant/routes";
+import { useSession, signIn, signOut, getSession } from "next-auth/react";
 
 const {
   HOME,
@@ -150,7 +151,7 @@ export const getMenuSider = (selectedKey: any) => {
               preview={false}
             />
           ),
-          label: <Link href={MORE.link}>{MORE.label}</Link>,
+          label: <div onClick={() => signOut()}>{MORE.label}</div>,
         },
       ]
   )

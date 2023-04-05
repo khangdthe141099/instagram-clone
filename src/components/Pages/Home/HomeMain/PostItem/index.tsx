@@ -1,8 +1,8 @@
 import Avatar from "@/components/Avatar";
 import Image from "next/image";
-import { Carousel } from "antd";
-import { RightOutlined, LeftOutlined } from "@ant-design/icons";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import PostImage from "@/components/PostImage";
+import Action from "@/components/Action";
 
 type Comment = {
   peopleId?: string | number;
@@ -14,28 +14,14 @@ interface IPostItem {
   avatarUrl?: string;
   name?: string;
   time?: string;
-  postUrl?: string[] | string;
+  postUrl?: string[];
   likes?: number[] | string[];
   comments?: Comment[];
+  stories?: number[] | string[]
 }
 
-const contentStyle: React.CSSProperties = {
-  margin: 0,
-  height: "468px",
-  color: "#fff",
-  lineHeight: "160px",
-  textAlign: "center",
-  background: "#364d79",
-};
-
 const PostItem = (props: IPostItem) => {
-  const { id, avatarUrl, comments, likes, name, postUrl, time } = props;
-
-  const slider = useRef<any>("");
-
-  const onChange = (currentSlide: number) => {
-    console.log(currentSlide);
-  };
+  const { id, avatarUrl, comments, likes, name, postUrl, time, stories } = props;
 
   return (
     <div className="post-item">
@@ -43,6 +29,7 @@ const PostItem = (props: IPostItem) => {
         <div className="post-item--top-left">
           <div className="avatar">
             <Avatar
+              stories={stories ? stories : []}
               img={avatarUrl}
               ringWidth={40}
               ringHeight={40}
@@ -71,32 +58,11 @@ const PostItem = (props: IPostItem) => {
       </div>
 
       <div className="post-item--body">
-        <div
-          className="post-btn post-btn--prev"
-          onClick={() => slider.current.prev()}
-        >
-          <div className="post-icon-inside post-icon-inside--prev"></div>
-        </div>
-        <div
-          className="post-btn post-btn--next"
-          onClick={() => slider.current.next()}
-        >
-          <div className="post-icon-inside post-icon-inside--next"></div>
-        </div>
-        <Carousel ref={slider}>
-          <div>
-            <h3 style={contentStyle}>1</h3>
-          </div>
-          <div>
-            <h3 style={contentStyle}>2</h3>
-          </div>
-          <div>
-            <h3 style={contentStyle}>3</h3>
-          </div>
-          <div>
-            <h3 style={contentStyle}>4</h3>
-          </div>
-        </Carousel>
+        <PostImage postUrl={postUrl} />
+      </div>
+
+      <div className="post-item--bottom">
+        <Action />
       </div>
     </div>
   );
