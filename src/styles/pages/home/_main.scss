@@ -1,6 +1,7 @@
 @import './home-reels';
 @import './home-sider';
 @import './home-main';
+@import './modal/create-post';
 
 .homepage {
     width: calc(100% - $nav_medium_width);

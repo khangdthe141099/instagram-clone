@@ -41,16 +41,7 @@ export type Comment = {
   like: number[],
   replies: Comment[]
 }
-export const LENGTH_CONSTANTS = {
-  DEFAULT_PAGE: 1,
-  DEFAULT_TOTAL: 0,
-  MAX_LENGTH_INPUT: 256,
-  DEFAULT_PAGE_SIZE: 10,
-  MAX_LENGTH_DESCRIPTION: 320,
-  DEFAULT_TEXTAREA_ROWS: 5,
-  DEFAULT_PAGE_SIZE_OPTIONS: ["10", "20", "50"],
-  DEFAULT_PAGE_SIZE_NFT_SET_AVATAR: 6,
-};
+
 
 export const COMMENT_TYPE = {
   LESS: "Less",
@@ -61,6 +52,7 @@ export const LOGIN_TYPE = {
   GOOGLE: "google",
   GITHUB: "github",
   FACEBOOK: "facebook",
+  CREDENTIALS: "credentials"
 };
 
 export const HTTP_STATUS_CONSTANTS = {
@@ -68,6 +60,7 @@ export const HTTP_STATUS_CONSTANTS = {
   ERROR_CODE_401: 401,
   SERVER_ERROR: 'E0',
   ERROR: 400,
+  SERVER_ERROR_CODE: 500,
 };
 
 export const HTTP_METHOD = {
@@ -77,3 +70,13 @@ export const HTTP_METHOD = {
   PATCH: 'PATCH',
   DELETE: 'DELETE'
 }
+
+export const LENGTH_CONSTANTS = {
+  DEFAULT_PAGE: 1,
+  DEFAULT_TOTAL: 0,
+  DEFAULT_TEXTAREA_ROWS: 4,
+  MAX_LENGTH_INPUT: 256,
+  DEFAULT_PAGE_SIZE: 10,
+  MAX_LENGTH_DESCRIPTION: 320,
+  DEFAULT_PAGE_SIZE_OPTIONS: ['10', '20', '50'],
+};

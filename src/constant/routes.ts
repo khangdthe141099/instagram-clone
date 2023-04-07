@@ -1,47 +1,61 @@
-export const ROUTES = {
-  HOME: {
+export const ROUTES = [
+  {
     key: "home",
     link: "/",
     label: "Home",
+    activeIcon: '/svg/components/sider/HomeIcon.svg',
+    icon: "/svg/components/sider/HomeIconActive.svg"
   },
-  SEARCH: {
+  {
     key: "search",
     link: "/search",
     label: "Search",
+    activeIcon: '/svg/components/sider/SearchActive.svg',
+    icon: "/svg/components/sider/Search.svg"
   },
-  EXPLORE: {
+  {
     key: "explore",
     link: "/explore",
     label: "Explore",
+    activeIcon: '/svg/components/sider/ExploreActive.svg',
+    icon: "/svg/components/sider/Explore.svg"
   },
-  REELS: {
+  {
     key: "reels",
     link: "/reels",
     label: "Reels",
+    activeIcon: '/svg/components/sider/ReelsActive.svg',
+    icon: "/svg/components/sider/Reels.svg"
   },
-  MESSAGES: {
+  {
     key: "messages",
     link: "/messages",
     label: "Messages",
+    activeIcon: '/svg/components/sider/MessengerActive.svg',
+    icon: "/svg/components/sider/Messenger.svg"
   },
-  NOTIFICATIONS :{
+  {
     key: "notifications",
     link: "/notifications",
     label: "Notifications",
+    activeIcon: '/svg/components/sider/Notifications.svg',
+    icon: "/svg/components/sider/Notifications.svg"
   },
-  CREATE :{
+  {
     key: "create",
-    link: "/create",
+    link: "/",
     label: "Create",
+    activeIcon: '/svg/components/sider/Create.svg',
+    icon: "/svg/components/sider/Create.svg"
   },
-  PROFILE :{
+  {
     key: "profile",
     link: "/profile",
     label: "Profile",
   },
-  MORE :{
-    key: "more",
-    link: "/more",
-    label: "More",
-  }
-};
+  {
+    key: "logout",
+    link: "",
+    label: "Log out",
+  },
+];

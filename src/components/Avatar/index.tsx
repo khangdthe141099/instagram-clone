@@ -14,7 +14,11 @@ const Avatar = (props: AvatarProps) => {
 
   return (
     <div
-      style={{ width: ringWidth, height: ringHeight }}
+      style={
+        stories?.length
+          ? { width: ringWidth, height: ringHeight }
+          : { width: "", height: "" }
+      }
       className={classNames("avatar-box", { stories: stories?.length })}
     >
       <Image

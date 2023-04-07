@@ -1,11 +1,109 @@
 .homesider {
-    position: sticky;
-    height: 100vh;
-    margin-bottom: 30px;
-    flex-shrink: 0;
-    max-width: $feed_sidebar_width;
-    right: 0;
+  position: sticky;
+  margin-bottom: 30px;
+  height: 100vh;
+  flex-shrink: 0;
+  max-width: $feed_sidebar_width;
+  right: 0;
+  width: 100%;
+  padding: 0;
+  top: 40px;
+
+  &-top {
     width: 100%;
-    padding: 0;
-    top: 0;
+  }
+
+  &-bottom {
+    width: 100%;
+    margin-top: 20px;
+
+    &--title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .suggest {
+        line-height: 18px;
+        font-size: 14px;
+        font-weight: 600;
+        color: rgb(115, 115, 115);
+        font-family: $font-family-system;
+      }
+
+      .seeall {
+        cursor: pointer;
+        font-family: $font-family-system;
+        font-size: 12px;
+        font-weight: 600;
+        text-overflow: ellipsis;
+        color: #000000;
+
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+    }
+
+    &--body {
+      margin-top: 15px;
+      .suggestion-item {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+
+.persontag {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &--left {
+    display: flex;
+    align-items: center;
+
+    .info {
+      display: flex;
+      flex-direction: column;
+      margin-left: 10px;
+
+      .nickname {
+        color: rgb(0, 0, 0);
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        font-weight: 600;
+        line-height: 18px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .name {
+        color: rgb(115, 115, 115);
+        font-family: $font-family-system;
+        text-overflow: ellipsis;
+        line-height: 18px;
+        font-size: 14px;
+        font-weight: 400;
+        cursor: pointer;
+      }
+
+      .suggestName {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .option {
+    color: rgb(0, 149, 246);
+    font-family: $font-family-system;
+    font-size: 14px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    cursor: pointer;
+
+    &--hover:hover {
+      color: #00376b;
+    }
+  }
 }

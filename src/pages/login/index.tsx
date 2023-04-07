@@ -17,6 +17,7 @@ import classNames from "classnames";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { GetServerSideProps } from "next";
 import Loading from "@/components/Loading";
+import { useLoginMethodAction } from "@/store/user/selector";
 
 const Login = () => {
   const [isShow, setIsShow] = useState(false);
@@ -28,6 +29,8 @@ const Login = () => {
     screen2: false,
     screen3: false,
   });
+
+  const handleSetLoginMethod = useLoginMethodAction();
 
   const intervalRef = useRef<number | null | NodeJS.Timer>(null);
 
@@ -84,6 +87,7 @@ const Login = () => {
           onClose: () => router.push(status?.url ? status?.url : ""),
         });
         setLoading(false);
+        handleSetLoginMethod(LOGIN_TYPE.CREDENTIALS);
       } else {
         setNoti(true);
         toast("Login failed!, please try again...");
@@ -97,6 +101,7 @@ const Login = () => {
   }
 
   const handleLogin = (e: any, type: string) => {
+    handleSetLoginMethod(type);
     e.preventDefault();
     signIn(type, { callbackUrl: process.env.NEXT_PUBLIC_URL });
   };
@@ -231,7 +236,7 @@ const Login = () => {
                 <button
                   onClick={(e) => handleLogin(e, LOGIN_TYPE.GOOGLE)}
                   className="login-btn"
-                  type="submit"
+                  type="button"
                 >
                   <span>
                     Sign in with Google <GoogleOutlined />
@@ -240,7 +245,7 @@ const Login = () => {
                 <button
                   onClick={(e) => handleLogin(e, LOGIN_TYPE.GITHUB)}
                   className="login-btn"
-                  type="submit"
+                  type="button"
                 >
                   <span>
                     Sign in with Github{" "}
@@ -250,7 +255,7 @@ const Login = () => {
                 <button
                   onClick={(e) => handleLogin(e, LOGIN_TYPE.FACEBOOK)}
                   className="login-btn"
-                  type="submit"
+                  type="button"
                 >
                   <span>
                     Facebook <FacebookOutlined style={{ marginLeft: "5px" }} />
