@@ -7,8 +7,13 @@ import { COMMENT_TYPE } from "@/constant";
 import classNames from "classnames";
 import dynamic from "next/dynamic";
 import { Popover } from "antd";
+import { useGetCurrentUser } from "@/pages/login/hooks";
 
-interface ActionProps {}
+interface ActionProps {
+  info?: any;
+  userId?: string;
+  postId?: string
+}
 
 const Picker = dynamic(
   () => {
@@ -19,7 +24,11 @@ const Picker = dynamic(
 
 const { Text } = Typography;
 
-const Action = (props: ActionProps) => {
+const Action = ({ info, userId, postId }: ActionProps) => {
+  const { currentUser } = useGetCurrentUser(userId!) as any;
+
+  const { comments, likes, postDesc } = info;
+
   const [open, setOpen] = useState(false);
   const [commentText, setCommentText] = useState();
 
@@ -66,18 +75,22 @@ const Action = (props: ActionProps) => {
         </div>
       </div>
 
-      <Text className="like-count">10 likes</Text>
+      <Text className="like-count">
+        {likes?.length} {likes?.length > 1 ? "likes" : "like"}
+      </Text>
 
       <div className="post-desc">
         <div className="post-desc--top">
-          <span className="author">Khangdt:</span>
-          <span className="desc">
-            day la description co show more and translate
-          </span>
+          <span className="author">{currentUser?.username}</span>
+          <span className="desc">{postDesc}</span>
         </div>
 
-        <div className="post-desc--bottom">View all 1000 comments</div>
-        <Comment type={COMMENT_TYPE.LESS} />
+        {comments?.length ? (
+          <>
+            <div className="post-desc--bottom">View all {comments?.length} comments</div>
+            <Comment type={COMMENT_TYPE.LESS} postId={postId} userId={userId}/>
+          </>
+        ) : null}
       </div>
 
       <div className="post-comment">
@@ -88,7 +101,7 @@ const Action = (props: ActionProps) => {
           className="post-comment--input"
           type="text"
         />
-        {commentText && <Text className="post-comment--text">Post</Text>} 
+        {commentText && <Text className="post-comment--text">Post</Text>}
         <Popover
           content={<Picker width={300} height={350} />}
           title="Title"

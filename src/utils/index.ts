@@ -11,7 +11,7 @@ export const checkSuccessRequest = (response: any) => {
 export const checkServerErrorResponse = (response: any) => {
   return response?.status >= HTTP_STATUS_CONSTANTS.SERVER_ERROR_CODE;
 };
- 
+
 export const Picker = dynamic(
   () => {
     return import("emoji-picker-react");
@@ -26,3 +26,9 @@ export const getBase64 = (file: RcFile): Promise<string> =>
     reader.onload = () => resolve(reader.result as string);
     reader.onerror = (error) => reject(error);
   });
+
+export const findUserById = (users: any, userId: string) => {
+  const user = users.find((item: any) => item._id === userId);
+
+  return user;
+};

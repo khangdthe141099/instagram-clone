@@ -10,20 +10,16 @@ interface AvatarProps {
 }
 
 const Avatar = (props: AvatarProps) => {
-  const { img, ringWidth, ringHeight, width, height, stories } = props;
+  const { img, ringWidth = 40, ringHeight = 40, width = 36, height = 36, stories } = props;
 
   return (
     <div
-      style={
-        stories?.length
-          ? { width: ringWidth, height: ringHeight }
-          : { width: "", height: "" }
-      }
+      style={{ width: ringWidth, height: ringHeight }}
       className={classNames("avatar-box", { stories: stories?.length })}
     >
       <Image
         className="avatar-profile-image"
-        src={img}
+        src={img || ""}
         alt=""
         width={width}
         height={height}

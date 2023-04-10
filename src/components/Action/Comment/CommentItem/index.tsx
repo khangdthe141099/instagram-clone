@@ -2,24 +2,27 @@ import { useState } from "react";
 import Image from "next/image";
 import Avatar from "@/components/Avatar";
 import { Typography } from "antd";
+import { useGetCurrentUser } from "@/pages/login/hooks";
 
 type CommentItemProps = {
-    item?: any
+  item?: any;
+  userId?: string;
 };
 
 const { Text } = Typography;
 
-const CommentItem = (props: CommentItemProps) => {
-  const [isViewReply, setIsViewReply] = useState<boolean>(false)
+const CommentItem = ({ item, userId }: CommentItemProps) => {
+  const [isViewReply, setIsViewReply] = useState<boolean>(false);
+
+  const { currentUser } = useGetCurrentUser(userId!) as any;
+
 
   return (
     <>
       <div className="comment-top">
         <div className="comment-left">
           <Avatar
-            img={
-              "https://i.pinimg.com/originals/c0/4b/01/c04b017b6b9d1c189e15e6559aeb3ca8.png"
-            }
+            img={currentUser?.profileImg}
             ringWidth={40}
             ringHeight={40}
             width={36}
@@ -28,12 +31,14 @@ const CommentItem = (props: CommentItemProps) => {
 
           <div className="comment-info">
             <div className="comment-info--top">
-              <Text className="name">Khang</Text>
-              <Text className="desc">Very nice</Text>
+              <Text className="name">{currentUser?.username}</Text>
+              <Text className="desc">{item?.content}</Text>
             </div>
             <div className="comment-info--bottom">
-              <Text className="time">18h</Text>
-              <Text className="like">7 likes</Text>
+              <Text className="time">{item?.createdAt}</Text>
+              <Text className="like">
+                {item?.like?.length} {item?.like?.length > 1 ? "likes" : "like"}
+              </Text>
               <Text className="reply">Reply</Text>
               <Image
                 className="more-option-comment"
@@ -56,10 +61,17 @@ const CommentItem = (props: CommentItemProps) => {
         </div>
       </div>
 
-      <div className="comment-bottom">
-        <div className="divider"></div>
-        <Text onClick={() => setIsViewReply(prev => !prev)} className="comment-bottom--text">{isViewReply ? `Hide replies (1)` : `View replies (1)`}</Text>
-      </div>
+      {item?.replies.length > 1 ? (
+        <div className="comment-bottom">
+          <div className="divider"></div>
+          <Text
+            onClick={() => setIsViewReply((prev) => !prev)}
+            className="comment-bottom--text"
+          >
+            {isViewReply ? `Hide replies (1)` : `View replies (1)`}
+          </Text>
+        </div>
+      ) : null}
     </>
   );
 };

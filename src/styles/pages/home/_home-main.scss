@@ -211,6 +211,7 @@
                   display: flex;
                   align-items: center;
                   justify-content: space-between;
+                  margin-bottom: 10px;
 
                   .comment-left {
                     display: flex;
@@ -266,7 +267,6 @@
                 }
 
                 .comment-bottom {
-                  margin-top: 10px;
                   cursor: pointer;
                   margin-left: 50px;
                   margin-bottom: 15px;
@@ -303,6 +303,7 @@
             width: 100%;
             display: flex;
             align-items: center;
+            margin-top: 15px;
 
             input {
               flex: 1;

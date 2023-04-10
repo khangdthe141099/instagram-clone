@@ -1,26 +1,31 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import HomeReels from "./HomeReels";
 import PostItem from "./PostItem";
 import { posts } from "./data";
 import { useSession } from "next-auth/react";
-import useGetCurrentUser from "@/pages/login/hooks";
-import {
-  useUserAction,
-  useUserDetail,
-  useLoginMethod,
-} from "@/store/user/selector";
+import { useGetCurrentUser, useGetCurrentPost } from "@/pages/login/hooks";
+import { useUserAction, useLoginMethod } from "@/store/user/selector";
+import { useAllPostAction, useAllPost } from "@/store/post/selector";
 import { LOGIN_TYPE } from "@/constant";
 
 const HomeMain: FC = () => {
-  const { data } = useSession();
-
-  const { image, ...rest } = data?.user as any;
-
-  const handleSetUserDetail = useUserAction();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const method = useLoginMethod();
 
+  const { data } = useSession();
+  const { image, ...rest } = data?.user as any;
+
+  const handleSetUserDetail = useUserAction();
+  const handleSetAllPost = useAllPostAction();
+
   const { currentUser, isLoading } = useGetCurrentUser(data?.user?.email!);
+  const { currentPost } = useGetCurrentPost();
+
+  const allPost = useAllPost()
 
   useEffect(() => {
     if (!currentUser) return;
@@ -35,13 +40,19 @@ const HomeMain: FC = () => {
     }
   }, [currentUser, handleSetUserDetail, image, method, rest]);
 
+  useEffect(() => {
+    if (!currentPost) return;
+
+    handleSetAllPost(currentPost);
+  }, [currentPost, handleSetAllPost]);
+
   return (
     <div className="homemain">
       <HomeReels />
 
       <div className="posts-list">
-        {posts.map((item, index) => (
-          <PostItem key={index} {...item} />
+        {allPost.map((item: any, index: any) => (
+          mounted && <PostItem key={index} {...item} />
         ))}
       </div>
     </div>

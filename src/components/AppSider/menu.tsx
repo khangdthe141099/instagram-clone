@@ -3,7 +3,8 @@ import { Image, Avatar } from "antd";
 import { ROUTES } from "@/constant/routes";
 import { useSession, signIn, signOut, getSession } from "next-auth/react";
 import { PoweroffOutlined, UserOutlined } from "@ant-design/icons";
-import { useModal } from "@/hooks/useModal";
+import usePostStore from '@/store/post/usePostStore'
+import useUserStore from '@/store/user/useUserStore'
 
 const avatarStyle = {
   width: "26px",
@@ -18,7 +19,16 @@ export const getMenuSider = (
   selectedKey: any,
   profileImg: string,
   onOpenCreatePost: any
-) => {
+)   => {
+  const postStore = usePostStore as any
+  const userStore = useUserStore as any
+
+  const handleLogout = () => {
+    signOut()
+    postStore.persist.clearStorage() 
+    userStore.persist.clearStorage()
+  }
+
   const renderIcon = (item: any) => {
     const { key } = item;
 
@@ -48,7 +58,7 @@ export const getMenuSider = (
     const { key } = item;
 
     if (key === "logout") {
-      return <div onClick={() => signOut()}>{item.label}</div>;
+      return <div onClick={handleLogout}>{item.label}</div>;
     } else if (key === "create") {
       return (
         <div

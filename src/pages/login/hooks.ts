@@ -1,8 +1,9 @@
 import { userService } from "@/services/userService";
+import { postService } from "@/services/postService";
 import { useEffect, useState } from "react";
 import { HTTP_STATUS_CONSTANTS } from "@/constant";
 
-const useGetCurrentUser = (userId: string) => {
+export const useGetCurrentUser = (userId: string) => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState([]);
 
@@ -35,4 +36,34 @@ const useGetCurrentUser = (userId: string) => {
   };
 };
 
-export default useGetCurrentUser;
+export const useGetCurrentPost = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentPost, setCurrentPost] = useState([]);
+
+  useEffect(() => {
+    const setDefaultValue = () => {
+      setIsLoading(false);
+      setCurrentPost([]);
+    };
+
+    (async () => {
+      setIsLoading(true);
+
+      try {
+        const { data, status }: any = await postService.getAllPost();
+
+        if (status === HTTP_STATUS_CONSTANTS.OK) setCurrentPost(data.post);
+      } catch (e) {
+        setDefaultValue();
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, []);
+
+  return {
+    isLoading,
+    currentPost,
+  };
+};
+

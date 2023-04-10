@@ -1,8 +1,9 @@
 import Avatar from "@/components/Avatar";
 import Image from "next/image";
-import { useRef, useState } from "react";
+
 import PostImage from "@/components/PostImage";
 import Action from "@/components/Action";
+import { useGetCurrentUser } from "@/pages/login/hooks";
 
 type Comment = {
   peopleId?: string | number;
@@ -10,18 +11,18 @@ type Comment = {
 };
 
 interface IPostItem {
-  id?: string | number;
-  avatarUrl?: string;
-  name?: string;
-  time?: string;
+  _id?: string;
   postUrl?: string[];
-  likes?: number[] | string[];
-  comments?: Comment[];
-  stories?: number[] | string[]
+  createdAt?: string;
+  userId?: string;
+  rest?: any;
 }
 
 const PostItem = (props: IPostItem) => {
-  const { id, avatarUrl, comments, likes, name, postUrl, time, stories } = props;
+  const { _id, postUrl, createdAt, userId, ...rest } = props;
+
+  const { currentUser } = useGetCurrentUser(userId!) as any;
+
 
   return (
     <div className="post-item">
@@ -29,19 +30,19 @@ const PostItem = (props: IPostItem) => {
         <div className="post-item--top-left">
           <div className="avatar">
             <Avatar
-              stories={stories ? stories : []}
-              img={avatarUrl}
+              stories={[]}
+              img={currentUser?.profileImg}
               ringWidth={40}
               ringHeight={40}
               width={36}
               height={36}
             />
           </div>
-          <h4>{name}</h4>
+          <h4>{currentUser?.username}</h4>
           <div className="time-post">
             <span>•</span>
             <time dateTime="2023-03-30T15:28:44.000Z" title="Mar 30, 2023">
-              {time}
+              {createdAt}
             </time>
           </div>
         </div>
@@ -62,7 +63,7 @@ const PostItem = (props: IPostItem) => {
       </div>
 
       <div className="post-item--bottom">
-        <Action />
+        <Action info={rest} userId={userId} postId={_id}/>
       </div>
     </div>
   );
