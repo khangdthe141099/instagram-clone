@@ -17,15 +17,13 @@ export default async function handler(
 
     const { _id, userId, postUrl, likes, comments, postDesc } = req.body;
 
-    //check duplicates user:
-    const checkExisting = await Posts.findOne({ _id });
-    if (checkExisting)
-      return res.status(422).json({ message: "User already exist...!" });
-
     //hash passwords:
     Posts.create({ userId, postUrl, likes, comments, postDesc })
       .then((data) => res.status(200).json({ status: true, post: data }))
-      .catch((error) => res.status(404).json({ error: error }));
+      .catch((error) => {
+        console.log(error)
+        return res.status(404).json({ error: error })
+      });
   } else if (req.method === HTTP_METHOD.GET) {
     Posts.find()
       .then((data) => res.status(200).json({ post: data }))

@@ -2,8 +2,8 @@ import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
 
 interface Post {
-  allPost: any,
-  userPost: any
+  allPost: any;
+  userPost: any;
 }
 
 export interface PostAction {
@@ -12,8 +12,8 @@ export interface PostAction {
 }
 
 const initialState: Post = {
-    allPost: [],
-    userPost: []
+  allPost: [],
+  userPost: [],
 };
 
 const usePostStore = create<Post & PostAction>(

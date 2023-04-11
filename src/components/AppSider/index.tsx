@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { FC, useEffect, useMemo, useState } from "react";
-import Link from "next/link";
+import { FC, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 import { Image, Layout, Menu } from "antd";
@@ -31,8 +30,13 @@ const Sider: FC = () => {
   const user = useUserDetail() as any;
 
   const handleSelected = (value: { key: string }) => {
+    
     setSelectedKey(value.key);
     localStorage.setItem("selected", value.key);
+  };
+
+  const handleCancelModal = () => {
+    setSelectedKey("home");
   };
 
   useEffect(() => {
@@ -79,7 +83,11 @@ const Sider: FC = () => {
           onClick={handleSelected}
         />
       </SiderAntd>
-      <CreatePost isModalOpen={openCreatePost} onCloseCreatePost={onCloseCreatePost}/>
+      <CreatePost
+        onCancel={handleCancelModal}
+        isModalOpen={openCreatePost}
+        onCloseCreatePost={onCloseCreatePost}
+      />
     </>
   );
 };

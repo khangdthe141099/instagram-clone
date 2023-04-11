@@ -1,18 +1,15 @@
 import { FC, useEffect, useState } from "react";
 import HomeReels from "./HomeReels";
 import PostItem from "./PostItem";
-import { posts } from "./data";
 import { useSession } from "next-auth/react";
 import { useGetCurrentUser, useGetCurrentPost } from "@/pages/login/hooks";
 import { useUserAction, useLoginMethod } from "@/store/user/selector";
 import { useAllPostAction, useAllPost } from "@/store/post/selector";
 import { LOGIN_TYPE } from "@/constant";
+import Loading from "@/components/Loading";
 
 const HomeMain: FC = () => {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const method = useLoginMethod();
 
@@ -25,7 +22,11 @@ const HomeMain: FC = () => {
   const { currentUser, isLoading } = useGetCurrentUser(data?.user?.email!);
   const { currentPost } = useGetCurrentPost();
 
-  const allPost = useAllPost()
+  const allPost = useAllPost();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -43,7 +44,13 @@ const HomeMain: FC = () => {
   useEffect(() => {
     if (!currentPost) return;
 
-    handleSetAllPost(currentPost);
+    handleSetAllPost(
+      currentPost?.sort((a: any, b: any) => {
+        const date1 = new Date(a.createdAt).valueOf();
+        const date2 = new Date(b.createdAt).valueOf();
+        return date2 - date1;
+      })
+    );
   }, [currentPost, handleSetAllPost]);
 
   return (
@@ -51,9 +58,13 @@ const HomeMain: FC = () => {
       <HomeReels />
 
       <div className="posts-list">
-        {allPost.map((item: any, index: any) => (
-          mounted && <PostItem key={index} {...item} />
-        ))}
+        {mounted ? (
+          allPost?.map((item: any, index: any) => (
+            <PostItem key={index} {...item} />
+          ))
+        ) : (
+          <Loading />
+        )}
       </div>
     </div>
   );
