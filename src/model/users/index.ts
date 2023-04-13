@@ -2,10 +2,10 @@ import { Schema, model, models } from "mongoose";
 
 const userSchema = new Schema(
   {
-    email: { type: String, required: true, unique: true },
-    fullname: { type: String, required: true },
-    username: { type: String, required: true },
-    password: { type: String, required: true },
+    email: { type: String, required: false, unique: true, default: "" },
+    fullname: { type: String, required: false, default: "" },
+    username: { type: String, required: false, default: "" },
+    password: { type: String, required: false, default: "" },
     profileImg: { type: String, required: false, default: "" },
     bio: { type: String, required: false, default: "" },
     is_private: { type: Boolean , required: false, default: false },

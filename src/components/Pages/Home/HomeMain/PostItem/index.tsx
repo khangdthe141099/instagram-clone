@@ -7,6 +7,7 @@ import { useGetCurrentUser } from "@/pages/login/hooks";
 import { useUserDetail } from "@/store/user/selector";
 import OptionPost from "@/components/Pages/Home/Modal/OptionModal";
 import { useModal } from "@/hooks/useModal";
+import moment from "moment";
 
 type Comment = {
   peopleId?: string | number;
@@ -15,17 +16,40 @@ type Comment = {
 
 interface IPostItem {
   _id?: string;
-  postUrl?: string[];
+  postUrl?: any;
   createdAt?: string;
   userId?: string;
   rest?: any;
 }
 
+moment.updateLocale('en', {
+  relativeTime : {
+      future: "in %s",
+      past:   "%s",
+      s  : 'a few seconds ago',
+      ss : '%ds',
+      m:  "%dm",
+      mm: "%dm",
+      h:  "%dh",
+      hh: "%dh",
+      d:  "%dd",
+      dd: "%dd",
+      M:  "%dm",
+      MM: "%dm",
+      y:  "%dy",
+      yy: "%dy"
+  }
+});
+
 const PostItem = (props: IPostItem) => {
   const { _id, postUrl, createdAt, userId, ...rest } = props;
 
+  const fromNow = moment(createdAt).fromNow()
+
+  //active user
   const userDetail = useUserDetail();
 
+  //User post corresponding:
   const { currentUser } = useGetCurrentUser(userId!) as any;
 
   const {
@@ -42,20 +66,18 @@ const PostItem = (props: IPostItem) => {
             <div className="avatar">
               <Avatar
                 stories={[]}
-                img={
-                  currentUser ? currentUser?.profileImg : userDetail?.profileImg
-                }
+                img={currentUser?.profileImg}
                 ringWidth={40}
                 ringHeight={40}
                 width={36}
                 height={36}
               />
             </div>
-            <h4>{currentUser ? currentUser?.username : userDetail?.name}</h4>
+            <h4>{currentUser?.username}</h4>
             <div className="time-post">
               <span>•</span>
               <time dateTime="2023-03-30T15:28:44.000Z" title="Mar 30, 2023">
-                {createdAt}
+                {fromNow}
               </time>
             </div>
           </div>
@@ -81,8 +103,11 @@ const PostItem = (props: IPostItem) => {
         </div>
       </div>
       <OptionPost
+        owner={userDetail?.email === userId}
         isModalOpen={openOptionPost}
         onCloseOptionPost={onCloseOptionPost}
+        postId={_id}
+        userId={userId}
       />
     </>
   );

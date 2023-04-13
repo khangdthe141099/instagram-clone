@@ -17,23 +17,44 @@ interface IDiscardPost {
   onCloseDiscardPost?: any;
   onCloseCreatePost?: any;
   reset?: any;
+  name?: string;
+  desc?: string;
+  textAction?: any;
+  onCloseOptionPost?: any;
+  handleDeletePost?: any;
+  type?: string;
+  setLoadingDelete?: any
 }
 
 const DiscardPost = (props: IDiscardPost) => {
-  const { isModalOpen, onCloseDiscardPost, onCloseCreatePost, reset, onCancel } = props;
+  const {
+    isModalOpen,
+    onCloseDiscardPost,
+    onCloseCreatePost,
+    reset,
+    onCancel,
+    name,
+    desc,
+    textAction,
+    onCloseOptionPost,
+    handleDeletePost,
+    type,
+    setLoadingDelete
+  } = props;
 
   //Call when user cancel modal or click X button:
   const handleCancelModal = () => {
     onCloseDiscardPost();
-    // onCancel();
   };
 
-  const handleDiscard = () => {
-    onCloseDiscardPost();
-    onCloseCreatePost();
-    reset();
-    onCancel();
-  }
+  const handleDiscard = (params?: any) => {
+    setLoadingDelete && setLoadingDelete(true)
+    params !== "delete" && onCloseDiscardPost();
+    onCloseCreatePost && onCloseCreatePost();
+    reset && reset();
+    onCancel && onCancel();
+    handleDeletePost && handleDeletePost();
+  };
 
   return (
     <>
@@ -49,12 +70,12 @@ const DiscardPost = (props: IDiscardPost) => {
       >
         <div className="discard-post-wrapper">
           <div className="discard-post-wrapper--top">
-            <div className="title">Discard post?</div>
-            <div className="desc">{`If you leave, your edits won't be saved.`}</div>
+            <div className="title">{name}</div>
+            <div className="desc">{desc}</div>
           </div>
 
-          <div onClick={handleDiscard} className="btn-wrapper">
-            <span className="text text--discard">Discard</span>
+          <div onClick={() => handleDiscard(type)} className="btn-wrapper">
+            <span className="text text--discard">{textAction}</span>
           </div>
 
           <div onClick={onCloseDiscardPost} className="btn-wrapper">

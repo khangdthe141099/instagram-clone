@@ -40,12 +40,12 @@ const PostImage = (props: PostImageProps) => {
         </div>
       )}
       <Carousel afterChange={onCarouselChange} ref={slider}>
-        {postUrl?.map((url, index) => (
+        {postUrl?.map((url: any, index) => (
           <Image
             key={index}
             width={550}
             height={468}
-            src={url}
+            src={url?.thumbUrl}
             alt="More option"
           />
         ))}

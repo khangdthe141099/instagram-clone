@@ -1,8 +1,21 @@
 @import "./layout/public/sider/sider";
 @import "./loading/main";
+@import "./skeleton/main";
 
 .layout-container {
   display: flex;
   width: 100%;
   background-color: $color_white;
+
+  .go-to-top {
+    position: fixed;
+    right: 15px;
+    bottom: 15px;
+    cursor: pointer;
+    font-size: 35px;
+
+    &:hover {
+      opacity: 0.6;
+    }
+  }
 }

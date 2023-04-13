@@ -1,13 +1,12 @@
 import AppModal from "@/components/AppModal";
 import Avatar from "@/components/Avatar";
 import { Modal, Popover, Typography, Upload } from "antd";
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import Image from "next/image";
 import ImgCrop from "antd-img-crop";
 import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
 import { Picker, getBase64, sortCurrenPost } from "@/utils";
 import { MAX_LENGTH_IMAGE_CREATE, TOAST_TEXT } from "@/constant";
-import { useUserDetail } from "@/store/user/selector";
 import { postService } from "@/services/postService";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -17,25 +16,37 @@ import Loading from "@/components/Loading";
 import DiscardPost from "../DiscardPost";
 import { useModal } from "@/hooks/useModal";
 import classNames from "classnames";
+import { useGetPostById } from "./hooks";
+import { useGetCurrentUser } from "@/pages/login/hooks";
 
 const { Text } = Typography;
 
-interface ICreatePost {
+interface IUpdatePost {
   isModalOpen?: boolean;
-  centered?: boolean;
   afterClose?: void;
   closable?: boolean;
   closeIcon?: ReactNode;
-  footer?: ReactNode | null;
-  maskClosable?: boolean;
   title?: ReactNode;
   width?: string | number;
   onCancel?: any;
-  onCloseCreatePost?: any;
+  onCloseUpdatePost?: any;
+  postId?: any;
+  onCloseOptionPost?: any;
+  userId?: any;
 }
 
-const CreatePost = (props: ICreatePost) => {
-  const { isModalOpen, onCloseCreatePost, onCancel } = props;
+const UpdatePost = (props: IUpdatePost) => {
+  const {
+    isModalOpen,
+    onCloseUpdatePost,
+    onCancel,
+    postId,
+    onCloseOptionPost,
+    userId,
+  } = props;
+
+  const { currentPost } = useGetPostById(postId) as any;
+  const { currentUser } = useGetCurrentUser(userId!) as any;
 
   const {
     open: openDiscardPost,
@@ -53,9 +64,7 @@ const CreatePost = (props: ICreatePost) => {
 
   const [loading, setLoading] = useState(false);
 
-  const user = useUserDetail();
-
-  const { currentPost } = useGetCurrentPost() as any;
+  const { allPost } = useGetCurrentPost() as any;
 
   const handleSetAllPost = useAllPostAction();
 
@@ -104,48 +113,54 @@ const CreatePost = (props: ICreatePost) => {
     setFileList([]);
   };
 
-  const handleCreatePost = async () => {
+  const handleUpdatePost = async () => {
     if (!captionValue || fileList?.length === 0) {
-      toast(TOAST_TEXT.CREATE_POST.ERROR_NULL);
+      toast(TOAST_TEXT.UPDATE_POST.ERROR_NULL);
       return;
     }
 
     setLoading(true);
 
-    postService
-      .createPost({
-        userId: user?.email || "",
-        postUrl: fileList || "",
-        likes: [],
-        comments: [],
-        postDesc: captionValue || "",
-      })
-      .then((res: any) => {
-        currentPost.push(res?.data?.post);
-        sortCurrenPost(currentPost);
-        handleSetAllPost(currentPost);
+    if (postId) {
+      postService
+        .updatePost(postId, {
+          postUrl: fileList || "",
+          postDesc: captionValue || "",
+        })
+        .then(async (res: any) => {
+          const { data, status }: any = await postService.getAllPost();
 
-        onCloseCreatePost();
+          sortCurrenPost(data?.post);
+          handleSetAllPost(data?.post);
 
-        toast(TOAST_TEXT.CREATE_POST.SUCCESS, {
-          onClose: () => {
-            handleResetValue();
-          },
+          onCloseUpdatePost();
+          onCloseOptionPost();
+
+          toast(TOAST_TEXT.UPDATE_POST.SUCCESS, {
+            onClose: () => {
+              handleResetValue();
+            },
+          });
+          setLoading(false);
+        })
+        .catch((err) => {
+          setLoading(false);
+          toast(TOAST_TEXT.UPDATE_POST.ERROR_CREATE_FAILED);
+          console.log("loi:> ", err);
         });
-        setLoading(false);
-      })
-      .catch((err) => {
-        setLoading(false);
-        toast(TOAST_TEXT.CREATE_POST.ERROR_CREATE_FAILED);
-        console.log("loi:> ", err);
-      });
+    }
   };
+
+  useEffect(() => {
+    setFileList(currentPost?.postUrl);
+    setCaptionValue(currentPost?.postDesc);
+  }, [currentPost, isModalOpen]);
 
   return (
     <>
       <AppModal
         wrapClassName={"create-post-modal"}
-        title="Create new post"
+        title="Edit post"
         onCancel={handleCancelModal}
         isModalOpen={isModalOpen}
         closable
@@ -159,7 +174,7 @@ const CreatePost = (props: ICreatePost) => {
                 onChange={onChange}
                 onPreview={handlePreview}
               >
-                {fileList.length < MAX_LENGTH_IMAGE_CREATE && (
+                {fileList?.length < MAX_LENGTH_IMAGE_CREATE && (
                   <>
                     <Image
                       className="more-option"
@@ -192,14 +207,12 @@ const CreatePost = (props: ICreatePost) => {
           <div className="create-post-wrapper--right">
             <div className="top">
               <Avatar
-                img={user?.profileImg}
+                img={currentUser?.profileImg}
                 width={28}
                 height={28}
                 stories={[]}
               />
-              <Text className="person-name">
-                {user?.name ? user?.name : user?.username}
-              </Text>
+              <Text className="person-name">{currentUser?.username}</Text>
             </div>
 
             <div className="body">
@@ -236,12 +249,12 @@ const CreatePost = (props: ICreatePost) => {
             </div>
 
             <button
-              onClick={handleCreatePost}
+              onClick={handleUpdatePost}
               className={classNames("share-btn", {
                 "share-btn--disabled": !captionValue || fileList?.length === 0,
               })}
             >
-              {loading ? <Loading /> : "Share"}
+              {loading ? <Loading /> : "Edit"}
             </button>
           </div>
         </div>
@@ -249,7 +262,7 @@ const CreatePost = (props: ICreatePost) => {
       <DiscardPost
         isModalOpen={openDiscardPost}
         onCloseDiscardPost={onCloseDiscardPost}
-        onCloseCreatePost={onCloseCreatePost}
+        onCloseCreatePost={onCloseUpdatePost}
         reset={handleResetValue}
         onCancel={onCancel}
         name={"Discard post?"}
@@ -261,4 +274,4 @@ const CreatePost = (props: ICreatePost) => {
   );
 };
 
-export default CreatePost;
+export default UpdatePost;

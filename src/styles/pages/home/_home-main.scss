@@ -11,6 +11,21 @@
     align-items: center;
     margin-top: 20px;
 
+    .no-post {
+      text-align: center;
+      line-height: 25px;
+      font-size: 20px;
+      color: rbg(38, 38, 38);
+      font-weight: 600;
+      font-family: $font-family-system;
+
+      &--link {
+        text-decoration: underline;
+        cursor: pointer;
+        color: #0095F6;
+      }
+    }
+
     .post-item {
       width: 100%;
       max-width: 470px;
@@ -313,11 +328,11 @@
 
             input::placeholder {
               font-weight: 600;
-              color: rgb(142, 142, 142);;
+              color: rgb(142, 142, 142);
             }
 
             &--text {
-              color: #0095F6;
+              color: #0095f6;
               font-weight: 600;
               font-size: 14px;
               cursor: pointer;

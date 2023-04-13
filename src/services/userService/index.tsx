@@ -10,6 +10,10 @@ class UserService {
 
     return publicRequest.get(`/api/user/${params}`);
   }
+
+  getAllUser(){
+    return publicRequest.get(`/api/user/find`);
+  }
 }
 
 export const userService = new UserService();

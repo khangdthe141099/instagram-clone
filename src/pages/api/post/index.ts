@@ -21,8 +21,7 @@ export default async function handler(
     Posts.create({ userId, postUrl, likes, comments, postDesc })
       .then((data) => res.status(200).json({ status: true, post: data }))
       .catch((error) => {
-        console.log(error)
-        return res.status(404).json({ error: error })
+        return res.status(404).json({ error: error });
       });
   } else if (req.method === HTTP_METHOD.GET) {
     Posts.find()

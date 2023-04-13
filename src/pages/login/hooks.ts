@@ -36,6 +36,37 @@ export const useGetCurrentUser = (userId: string) => {
   };
 };
 
+export const useGetAllUser = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [allUser, setAllUser] = useState([]);
+
+  useEffect(() => {
+    const setDefaultValue = () => {
+      setIsLoading(false);
+      setAllUser([]);
+    };
+
+    (async () => {
+      setIsLoading(true);
+
+      try {
+        const { data, status }: any = await userService.getAllUser();
+
+        if (status === HTTP_STATUS_CONSTANTS.OK) setAllUser(data.user);
+      } catch (e) {
+        setDefaultValue();
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, []);
+
+  return {
+    isLoading,
+    allUser,
+  };
+};
+
 export const useGetCurrentPost = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentPost, setCurrentPost] = useState([]);

@@ -1,19 +1,20 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { FC, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-
 import { Image, Layout, Menu } from "antd";
 import classNames from "classnames";
-
 import AppLink from "@/components/AppLink";
 const { Sider: SiderAntd } = Layout;
 import { getMenuSider } from "./menu";
 import { useUserDetail } from "@/store/user/selector";
 import CreatePost from "@/components/Pages/Home/Modal/CreatePost";
 import { useModal } from "@/hooks/useModal";
+import { useCreateModalAction } from "@/store/modal/selector";
 
 const Sider: FC = () => {
   const router = useRouter();
+
+  const handleSetCreateModal = useCreateModalAction();
 
   const {
     open: openCreatePost,
@@ -30,7 +31,6 @@ const Sider: FC = () => {
   const user = useUserDetail() as any;
 
   const handleSelected = (value: { key: string }) => {
-    
     setSelectedKey(value.key);
     localStorage.setItem("selected", value.key);
   };
@@ -49,7 +49,15 @@ const Sider: FC = () => {
     if (user) {
       setMenu(menu as any);
     }
-  }, [selectedKey, user]);
+  }, [onOpenCreatePost, selectedKey, user]);
+
+  useEffect(() => {
+    handleSetCreateModal({
+      openCreatePost,
+      onOpenCreatePost,
+      onCloseCreatePost,
+    });
+  }, [handleSetCreateModal, onCloseCreatePost, onOpenCreatePost, openCreatePost]);
 
   return (
     <>

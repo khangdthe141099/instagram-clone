@@ -57,7 +57,7 @@
           flex-direction: column;
           overflow-y: scroll;
           height: 300px;
-            padding-right: 20px;
+          padding-right: 20px;
 
           .top {
             width: 100%;
@@ -89,22 +89,22 @@
             }
 
             &--option {
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                
-                .count-text {
-                    font-size: 14px;
-                    color: #C7C7C7;
-                    font-weight: 600;
-                }
+              width: 100%;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+
+              .count-text {
+                font-size: 14px;
+                color: #c7c7c7;
+                font-weight: 600;
+              }
             }
           }
 
           .share-btn {
             color: white;
-            background-color: #0095F6;
+            background-color: #0095f6;
             border: none;
             border-radius: 5px;
             height: 35px;
@@ -114,7 +114,15 @@
             font-size: 16px;
 
             &:hover {
-                opacity: 0.8;
+              opacity: 0.8;
+            }
+
+            &--disabled {
+              background-color: rgb(177, 177, 177);
+              cursor: no-drop;
+              &:hover {
+                opacity: 1;
+              }
             }
           }
         }
@@ -128,7 +136,7 @@
   font-size: 16px;
   font-family: $font-family-system;
   font-weight: 400;
-  color: #C7C7C7;
+  color: #c7c7c7;
 }
 
 :-ms-input-placeholder {
@@ -136,12 +144,12 @@
   font-size: 16px;
   font-family: $font-family-system;
   font-weight: 400;
-  color: #C7C7C7;
+  color: #c7c7c7;
 }
 
 ::placeholder {
   font-size: 16px;
   font-family: $font-family-system;
   font-weight: 400;
-  color: #C7C7C7;
+  color: #c7c7c7;
 }
