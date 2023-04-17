@@ -6,337 +6,389 @@
 
   .posts-list {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    height: 100vh;
+    overflow-y: scroll;
     margin-top: 20px;
 
-    .no-post {
-      text-align: center;
-      line-height: 25px;
-      font-size: 20px;
-      color: rbg(38, 38, 38);
-      font-weight: 600;
-      font-family: $font-family-system;
-
-      &--link {
-        text-decoration: underline;
-        cursor: pointer;
-        color: #0095F6;
-      }
-    }
-
-    .post-item {
+    .infinite-scroll-component__outerdiv {
       width: 100%;
-      max-width: 470px;
-      margin-bottom: 12px;
-      padding-bottom: 20px !important;
-      border-radius: 0;
-      border-top: none;
-      border-left: none;
-      border-right: none;
-      border-bottom: 1px solid $color_ig_separator;
-      display: flex;
-      flex-direction: column;
+      height: 100%;
 
-      //TOP SECTION:
-      &--top {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        &-left {
-          width: 100%;
-          display: flex;
-          align-items: center;
-
-          .avatar {
-            margin-bottom: 6px;
-            margin-right: 12px;
-          }
-
-          h4 {
-            line-height: 18px;
-            --base-line-clamp-line-height: 18px;
-            font-size: 14px;
-            color: rbg(38, 38, 38);
-            min-width: 0;
-            word-wrap: break-word;
-            font-weight: 600;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-              Helvetica, Arial, sans-serif;
-            margin-right: 5px;
-          }
-
-          .time-post {
-            display: flex;
-            align-items: center;
-            color: #8e8e8e;
-            font-weight: 400;
-            font-size: 14px;
-            line-height: 18px;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-              Helvetica, Arial, sans-serif;
-
-            span {
-              margin-right: 5px;
-            }
-          }
-        }
-
-        &-right {
-          &:hover {
-            opacity: 0.5;
-            transition: all 0.5s ease;
-          }
-        }
-      }
-
-      //BODY SECTION:
-      &--body {
-        border-radius: 4px;
+      .infinite-scroll-component {
         overflow: hidden;
-        border: 1px solid rgb(239, 239, 239);
-        background-color: rgb(255, 255, 255);
-        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .no-post {
+          text-align: center;
+          line-height: 25px;
+          font-size: 20px;
+          color: rbg(38, 38, 38);
+          font-weight: 600;
+          font-family: $font-family-system;
 
-        .post-btn {
-          position: absolute;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 999;
-          cursor: pointer;
-          &--prev {
-            left: 10px;
-            top: 207px;
-          }
-
-          &--next {
-            right: 10px;
-            top: 207px;
-          }
-
-          .post-icon-inside {
-            background-size: 440px 411px;
-            background-image: url("/images/cdn_instagram1.png");
-            background-repeat: no-repeat;
-            width: 30px;
-            height: 30px;
-            z-index: 1000;
-            &--prev {
-              background-position: -129px -97px;
-            }
-
-            &--next {
-              background-position: -160px -97px;
-            }
+          &--link {
+            text-decoration: underline;
+            cursor: pointer;
+            color: #0095f6;
           }
         }
-      }
 
-      //BOTTOM SECTION:
-      &--bottom {
-        width: 100%;
-        margin-top: 18px;
-
-        .action-container {
+        .seeallcontainer {
           width: 100%;
+          height: 237px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          border-bottom: 1px solid $color_ig_separator;
+          border-top: 1px solid $color_ig_separator;
+          margin-bottom: 5px;
+          max-width: 470px;
+          
+
+          font-weight: 400;
+          font-family: $font-family-system;
+
+          .title {
+            margin-top: 10px;
+            color: rgb(0, 0, 0);
+            font-size: 20px;
+            line-height: 25px;
+          }
+
+          .desc {
+            margin-top: 5px;
+            color: rgb(115, 115, 115);
+            font-size: 14px;
+            line-height: 18px;
+          }
+
+          .view-link {
+            margin-top: 5px;
+            color: rgb(0, 149, 246);
+            font-size: 14px;
+            line-height: 18px;
+            font-weight: 600;
+            cursor: pointer;
+          }
+        }
+
+        .post-item {
+          width: 100%;
+          max-width: 470px;
+          margin-bottom: 12px;
+          padding-bottom: 20px !important;
+          border-radius: 0;
+          border-top: none;
+          border-left: none;
+          border-right: none;
+          border-bottom: 1px solid $color_ig_separator;
           display: flex;
           flex-direction: column;
 
-          .action-icon {
+          //TOP SECTION:
+          &--top {
             width: 100%;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
 
-            &--left {
+            &-left {
+              width: 100%;
               display: flex;
+              align-items: center;
 
-              &-item {
-                margin-right: 15px;
-                cursor: pointer;
+              .avatar {
+                margin-bottom: 6px;
+                margin-right: 12px;
               }
 
-              .like {
-                &:hover {
-                  animation: heart 0.6s ease;
+              h4 {
+                line-height: 18px;
+                --base-line-clamp-line-height: 18px;
+                font-size: 14px;
+                color: rbg(38, 38, 38);
+                min-width: 0;
+                word-wrap: break-word;
+                font-weight: 600;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                  Roboto, Helvetica, Arial, sans-serif;
+                margin-right: 5px;
+              }
+
+              .time-post {
+                display: flex;
+                align-items: center;
+                color: #8e8e8e;
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 18px;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                  Roboto, Helvetica, Arial, sans-serif;
+
+                span {
+                  margin-right: 5px;
                 }
               }
             }
 
-            &--right {
-              cursor: pointer;
+            &-right {
+              &:hover {
+                opacity: 0.5;
+                transition: all 0.5s ease;
+              }
             }
           }
 
-          .like-count {
-            line-height: 18px;
-            font-size: 14px;
-            color: rbg(38, 38, 38);
-            font-weight: 600;
-            font-family: $font-family-system;
-            cursor: pointer;
-            margin-top: 10px;
+          //BODY SECTION:
+          &--body {
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgb(239, 239, 239);
+            background-color: rgb(255, 255, 255);
+            position: relative;
+
+            .post-btn {
+              position: absolute;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              z-index: 999;
+              cursor: pointer;
+              &--prev {
+                left: 10px;
+                top: 207px;
+              }
+
+              &--next {
+                right: 10px;
+                top: 207px;
+              }
+
+              .post-icon-inside {
+                background-size: 440px 411px;
+                background-image: url("/images/cdn_instagram1.png");
+                background-repeat: no-repeat;
+                width: 30px;
+                height: 30px;
+                z-index: 1000;
+                &--prev {
+                  background-position: -129px -97px;
+                }
+
+                &--next {
+                  background-position: -160px -97px;
+                }
+              }
+            }
           }
 
-          .post-desc {
+          //BOTTOM SECTION:
+          &--bottom {
             width: 100%;
-            display: flex;
-            flex-direction: column;
+            margin-top: 18px;
 
-            &--top {
-              margin-top: 5px;
-              line-height: 18px;
-              font-size: 14px;
-              color: rbg(38, 38, 38);
-              font-family: $font-family-system;
-              .author {
-                font-weight: 600;
-                cursor: pointer;
-                margin-right: 5px;
-              }
-
-              .desc {
-                font-weight: 400;
-              }
-            }
-
-            &--bottom {
-              color: rgb(142, 142, 142);
-              font-weight: 400;
-              font-size: 14px;
-              line-height: 18px;
-              font-family: $font-family-system;
-              margin-top: 5px;
-              cursor: pointer;
-            }
-
-            .comment-container {
+            .action-container {
               width: 100%;
-              margin-top: 10px;
+              display: flex;
+              flex-direction: column;
 
-              .comment-wrapper {
+              .action-icon {
                 width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
 
-                .comment-top {
-                  width: 100%;
+                &--left {
                   display: flex;
-                  align-items: center;
-                  justify-content: space-between;
-                  margin-bottom: 10px;
 
-                  .comment-left {
-                    display: flex;
-                    align-items: flex-start;
+                  &-item {
+                    margin-right: 15px;
+                    cursor: pointer;
+                  }
 
-                    .comment-info {
-                      margin-left: 10px;
-
-                      &--top {
-                        .name {
-                          color: rbg(38, 38, 38);
-                          font-weight: 600;
-                          font-size: 14px;
-                          margin-right: 5px;
-                          cursor: pointer;
-                        }
-                      }
-
-                      &--bottom {
-                        display: flex;
-                        align-items: center;
-                        margin-top: 5px;
-
-                        .time {
-                          font-size: 12px;
-                          color: #8e8e8e;
-                          font-weight: 400;
-                          cursor: pointer;
-                          margin-right: 10px;
-                        }
-
-                        .like {
-                          font-size: 12px;
-                          color: #8e8e8e;
-                          font-weight: 600;
-                          cursor: pointer;
-                          margin-right: 10px;
-                        }
-
-                        .reply {
-                          font-size: 12px;
-                          color: #8e8e8e;
-                          font-weight: 600;
-                          cursor: pointer;
-                        }
-
-                        .more-option-comment {
-                          display: none;
-                        }
-                      }
+                  .like {
+                    &:hover {
+                      animation: heart 0.6s ease;
                     }
                   }
                 }
 
-                .comment-bottom {
+                &--right {
                   cursor: pointer;
-                  margin-left: 50px;
-                  margin-bottom: 15px;
+                }
+              }
 
-                  .divider {
-                    border-bottom: 1px solid rgb(142, 142, 142);
-                    box-sizing: border-box;
-                    display: inline-block;
-                    flex-direction: column;
-                    flex-shrink: 0;
-                    font: inherit;
-                    font-size: 100%;
-                    height: 0;
-                    margin: 0;
-                    margin-right: 16px;
-                    padding: 0;
-                    position: relative;
-                    vertical-align: middle;
-                    width: 24px;
+              .like-count {
+                line-height: 18px;
+                font-size: 14px;
+                color: rbg(38, 38, 38);
+                font-weight: 600;
+                font-family: $font-family-system;
+                cursor: pointer;
+                margin-top: 10px;
+              }
+
+              .post-desc {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+
+                &--top {
+                  margin-top: 5px;
+                  line-height: 18px;
+                  font-size: 14px;
+                  color: rbg(38, 38, 38);
+                  font-family: $font-family-system;
+                  .author {
+                    font-weight: 600;
+                    cursor: pointer;
+                    margin-right: 5px;
                   }
 
-                  &--text {
-                    font-size: 12px;
-                    line-height: 16px;
-                    color: rgb(142, 142, 142);
-                    font-weight: 600;
+                  .desc {
+                    font-weight: 400;
+                  }
+                }
+
+                &--bottom {
+                  color: rgb(142, 142, 142);
+                  font-weight: 400;
+                  font-size: 14px;
+                  line-height: 18px;
+                  font-family: $font-family-system;
+                  margin-top: 5px;
+                  cursor: pointer;
+                }
+
+                .comment-container {
+                  width: 100%;
+                  margin-top: 10px;
+
+                  .comment-wrapper {
+                    width: 100%;
+
+                    .comment-top {
+                      width: 100%;
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                      margin-bottom: 10px;
+
+                      .comment-left {
+                        display: flex;
+                        align-items: flex-start;
+
+                        .comment-info {
+                          margin-left: 10px;
+
+                          &--top {
+                            .name {
+                              color: rbg(38, 38, 38);
+                              font-weight: 600;
+                              font-size: 14px;
+                              margin-right: 5px;
+                              cursor: pointer;
+                            }
+                          }
+
+                          &--bottom {
+                            display: flex;
+                            align-items: center;
+                            margin-top: 5px;
+
+                            .time {
+                              font-size: 12px;
+                              color: #8e8e8e;
+                              font-weight: 400;
+                              cursor: pointer;
+                              margin-right: 10px;
+                            }
+
+                            .like {
+                              font-size: 12px;
+                              color: #8e8e8e;
+                              font-weight: 600;
+                              cursor: pointer;
+                              margin-right: 10px;
+                            }
+
+                            .reply {
+                              font-size: 12px;
+                              color: #8e8e8e;
+                              font-weight: 600;
+                              cursor: pointer;
+                            }
+
+                            .more-option-comment {
+                              display: none;
+                            }
+                          }
+                        }
+                      }
+                    }
+
+                    .comment-bottom {
+                      cursor: pointer;
+                      margin-left: 50px;
+                      margin-bottom: 15px;
+
+                      .divider {
+                        border-bottom: 1px solid rgb(142, 142, 142);
+                        box-sizing: border-box;
+                        display: inline-block;
+                        flex-direction: column;
+                        flex-shrink: 0;
+                        font: inherit;
+                        font-size: 100%;
+                        height: 0;
+                        margin: 0;
+                        margin-right: 16px;
+                        padding: 0;
+                        position: relative;
+                        vertical-align: middle;
+                        width: 24px;
+                      }
+
+                      &--text {
+                        font-size: 12px;
+                        line-height: 16px;
+                        color: rgb(142, 142, 142);
+                        font-weight: 600;
+                      }
+                    }
                   }
                 }
               }
-            }
-          }
 
-          .post-comment {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            margin-top: 15px;
+              .post-comment {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                margin-top: 15px;
 
-            input {
-              flex: 1;
-              border: none;
-              outline: none;
-            }
+                input {
+                  flex: 1;
+                  border: none;
+                  outline: none;
+                }
 
-            input::placeholder {
-              font-weight: 600;
-              color: rgb(142, 142, 142);
-            }
+                input::placeholder {
+                  font-weight: 600;
+                  color: rgb(142, 142, 142);
+                }
 
-            &--text {
-              color: #0095f6;
-              font-weight: 600;
-              font-size: 14px;
-              cursor: pointer;
-              margin: 0 10px;
+                &--text {
+                  color: #0095f6;
+                  font-weight: 600;
+                  font-size: 14px;
+                  cursor: pointer;
+                  margin: 0 10px;
+                }
+              }
             }
           }
         }

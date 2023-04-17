@@ -79,9 +79,6 @@ export const LENGTH_CONSTANTS = {
   DEFAULT_PAGE_SIZE_OPTIONS: ["10", "20", "50"],
 };
 
-export const MAX_LENGTH_IMAGE_CREATE = 10;
-export const UNDEFINED = "undefined";
-
 export const TOAST_TEXT = {
   CREATE_POST: {
     ERROR_NULL:
@@ -99,3 +96,9 @@ export const TOAST_TEXT = {
     SUCCESS: "🔥 Your post has been updated !",
   },
 };
+
+export const MAX_LENGTH_IMAGE_CREATE = 10;
+export const UNDEFINED = "undefined";
+
+export const LIMIT_DEFAULT = 5
+export const OFF_SET_DEFAULT = 5 

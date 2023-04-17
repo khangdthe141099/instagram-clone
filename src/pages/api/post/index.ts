@@ -15,17 +15,17 @@ export default async function handler(
     if (!req.body)
       return res.status(404).json({ error: "Don't have form data...!" });
 
-    const { _id, userId, postUrl, likes, comments, postDesc } = req.body;
+    const { _id, ...rest } = req.body;
 
     //hash passwords:
-    Posts.create({ userId, postUrl, likes, comments, postDesc })
+    Posts.create({ ...rest })
       .then((data) => res.status(200).json({ status: true, post: data }))
       .catch((error) => {
         return res.status(404).json({ error: error });
       });
   } else if (req.method === HTTP_METHOD.GET) {
     Posts.find()
-      .then((data) => res.status(200).json({ post: data }))
+      .then((data) => res.status(200).json({ post: data, total: data.length }))
       .catch();
   } else {
     res

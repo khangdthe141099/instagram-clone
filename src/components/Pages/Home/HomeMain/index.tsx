@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState, useRef } from "react";
 import HomeReels from "./HomeReels";
 import PostItem from "./PostItem";
 import { useSession } from "next-auth/react";
@@ -9,36 +9,55 @@ import {
 } from "@/pages/login/hooks";
 import { useUserAction, useLoginMethod } from "@/store/user/selector";
 import { useAllPostAction, useAllPost } from "@/store/post/selector";
-import { LOGIN_TYPE } from "@/constant";
+import { LOGIN_TYPE, LIMIT_DEFAULT, OFF_SET_DEFAULT } from "@/constant";
 import Loading from "@/components/Loading";
-import { useCreateModal } from "@/store/modal/selector";
 import PostSkeleton from "@/components/AppSkeleton/PostSkeleton";
 import { userService } from "@/services/userService";
 import { findUserByEmail } from "@/utils";
+import InfiniteScroll from "react-infinite-scroll-component";
+import SeeAll from "./components/SeeAll";
 
 const HomeMain: FC = () => {
-  const { onOpenCreatePost } = useCreateModal();
-
   const [mounted, setMounted] = useState(false);
+  const [allPostHome, setAllPostHome] = useState<any>([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [limit, setLimit] = useState(LIMIT_DEFAULT);
 
   const method = useLoginMethod();
-
   const { data } = useSession();
   const { image, ...rest } = data?.user as any;
 
+  const { allUser } = useGetAllUser();
+  const { currentUser } = useGetCurrentUser(data?.user?.email!);
+
+  const postRef = useRef<any>();
+
   const allPost = useAllPost();
+  const { currentPost, isLoading: loadingPost, total } = useGetCurrentPost();
 
   const handleSetUserDetail = useUserAction();
   const handleSetAllPost = useAllPostAction();
 
-  const { allUser } = useGetAllUser();
-  const { currentUser } = useGetCurrentUser(data?.user?.email!);
-  const { currentPost, isLoading: loadingPost } = useGetCurrentPost();
+  //Add more post to current list:
+  const fetchMoreData = () => {
+    setTimeout(() => {
+      if (allPostHome?.length >= total!) {
+        setHasMore(false);
+        return;
+      } else setLimit((prev) => prev + OFF_SET_DEFAULT);
+    }, 1500);
+  };
+
+  //Set current list:
+  useEffect(() => {
+    setAllPostHome(allPost.slice(0, limit));
+  }, [allPost, limit]);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  //Add user to list user if donn't already exist:
   useEffect(() => {
     const user = findUserByEmail(allUser, data?.user?.email!);
 
@@ -93,10 +112,7 @@ const HomeMain: FC = () => {
     );
   }, [currentPost, handleSetAllPost]);
 
-
   const renderListPost = () => {
-    if (!mounted) return <Loading />;
-
     if (loadingPost) {
       return <PostSkeleton />;
     } else {
@@ -111,7 +127,7 @@ const HomeMain: FC = () => {
       //       more...
       //     </div>
       //   );
-      return allPost?.map((item: any, index: any) => (
+      return allPostHome?.map((item: any, index: any) => (
         <PostItem key={index} {...item} />
       ));
     }
@@ -121,7 +137,29 @@ const HomeMain: FC = () => {
     <div className="homemain">
       <HomeReels />
 
-      <div className="posts-list">{renderListPost()}</div>
+      {mounted && (
+        <div id="scrollableDiv" className="posts-list">
+          <InfiniteScroll
+            dataLength={allPostHome?.length}
+            next={fetchMoreData}
+            hasMore={hasMore}
+            loader={
+              allPostHome?.length ? (
+                <div className="post-loader">
+                  <Loading />
+                </div>
+              ) : (
+                ""
+              )
+            }
+            scrollableTarget="scrollableDiv"
+            style={{ overflow: "hidden" }}
+            endMessage={<SeeAll />}
+          >
+            {renderListPost()}
+          </InfiniteScroll>
+        </div>
+      )}
     </div>
   );
 };

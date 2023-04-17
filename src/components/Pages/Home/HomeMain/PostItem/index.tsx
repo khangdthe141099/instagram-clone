@@ -8,6 +8,8 @@ import { useUserDetail } from "@/store/user/selector";
 import OptionPost from "@/components/Pages/Home/Modal/OptionModal";
 import { useModal } from "@/hooks/useModal";
 import moment from "moment";
+import { useRef, useState, useEffect } from "react";
+import { useAllPostAction, useAllPost } from "@/store/post/selector";
 
 type Comment = {
   peopleId?: string | number;
@@ -20,31 +22,47 @@ interface IPostItem {
   createdAt?: string;
   userId?: string;
   rest?: any;
+  postRef?: any;
 }
 
-moment.updateLocale('en', {
-  relativeTime : {
-      future: "in %s",
-      past:   "%s",
-      s  : 'a few seconds ago',
-      ss : '%ds',
-      m:  "%dm",
-      mm: "%dm",
-      h:  "%dh",
-      hh: "%dh",
-      d:  "%dd",
-      dd: "%dd",
-      M:  "%dm",
-      MM: "%dm",
-      y:  "%dy",
-      yy: "%dy"
-  }
+moment.updateLocale("en", {
+  relativeTime: {
+    future: "in %s",
+    past: "%s",
+    s: "a few seconds ago",
+    ss: "%ds",
+    m: "%dm",
+    mm: "%dm",
+    h: "%dh",
+    hh: "%dh",
+    d: "%dd",
+    dd: "%dd",
+    M: "%dm",
+    MM: "%dm",
+    y: "%dy",
+    yy: "%dy",
+  },
 });
 
 const PostItem = (props: IPostItem) => {
   const { _id, postUrl, createdAt, userId, ...rest } = props;
 
-  const fromNow = moment(createdAt).fromNow()
+  const allPost = useAllPost();
+
+  const initialState = allPost.map((item: any, index: string) => ({
+    postId: item._id,
+    status: true,
+  }));
+
+  const initialState1 = allPost.map((item: any, index: string) => ({
+    postId: item._id,
+    status: true,
+  }));
+
+  const [displayLikeCount, setDisplayLikeCount] = useState<any>(initialState);
+  const [displayComment, setDisplayComment] = useState<any>(initialState1);
+
+  const fromNow = moment(createdAt).fromNow();
 
   //active user
   const userDetail = useUserDetail();
@@ -57,6 +75,22 @@ const PostItem = (props: IPostItem) => {
     onOpenModal: onOpenOptionPost,
     onCloseModal: onCloseOptionPost,
   } = useModal();
+
+  const getCoresspondingLikeCount = () => {
+    const itemCoressponding = displayLikeCount.find(
+      (item: any) => item.postId === _id
+    );
+
+    return itemCoressponding;
+  };
+
+  const getCoresspondingComment = () => {
+    const itemCoressponding = displayComment.find(
+      (item: any) => item.postId === _id
+    );
+
+    return itemCoressponding;
+  };
 
   return (
     <>
@@ -99,7 +133,13 @@ const PostItem = (props: IPostItem) => {
         </div>
 
         <div className="post-item--bottom">
-          <Action info={rest} userId={userId} postId={_id} />
+          <Action
+            info={rest}
+            userId={userId}
+            postId={_id}
+            displayLikeCount={getCoresspondingLikeCount}
+            displayComment={getCoresspondingComment}
+          />
         </div>
       </div>
       <OptionPost
@@ -108,6 +148,10 @@ const PostItem = (props: IPostItem) => {
         onCloseOptionPost={onCloseOptionPost}
         postId={_id}
         userId={userId}
+        setDisplayLikeCount={setDisplayLikeCount}
+        displayLikeCount={displayLikeCount}
+        displayComment={displayComment}
+        setDisplayComment={setDisplayComment}
       />
     </>
   );

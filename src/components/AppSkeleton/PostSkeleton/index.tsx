@@ -20,7 +20,7 @@ function PostSkeleton({
   widthLine2 = 10,
   heightLine2 = 10,
   widthImg,
-  heightImg = 400,
+  heightImg = 450
 }: IPostSkeleton) {
   return (
     <div className="post-ske-container">

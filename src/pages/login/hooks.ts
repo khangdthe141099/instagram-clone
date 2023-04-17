@@ -70,11 +70,13 @@ export const useGetAllUser = () => {
 export const useGetCurrentPost = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentPost, setCurrentPost] = useState([]);
+  const [total, setTotal] = useState(null)
 
   useEffect(() => {
     const setDefaultValue = () => {
       setIsLoading(false);
       setCurrentPost([]);
+      setTotal(null)
     };
 
     (async () => {
@@ -82,8 +84,10 @@ export const useGetCurrentPost = () => {
 
       try {
         const { data, status }: any = await postService.getAllPost();
-
-        if (status === HTTP_STATUS_CONSTANTS.OK) setCurrentPost(data.post);
+        if (status === HTTP_STATUS_CONSTANTS.OK){
+          setCurrentPost(data.post);
+          setTotal(data.total)
+        }
       } catch (e) {
         setDefaultValue();
       } finally {
@@ -95,6 +99,7 @@ export const useGetCurrentPost = () => {
   return {
     isLoading,
     currentPost,
+    total
   };
 };
 

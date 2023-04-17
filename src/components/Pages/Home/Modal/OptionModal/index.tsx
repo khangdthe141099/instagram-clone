@@ -1,5 +1,5 @@
 import { Modal } from "antd";
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState, useEffect, useMemo } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { options, optionKey, ownOptions } from "./const";
@@ -29,10 +29,24 @@ interface IOptionPost {
   owner?: boolean;
   postId?: any;
   userId?: any;
+  setDisplayLikeCount?: any;
+  displayLikeCount?: any;
+  displayComment?: any;
+  setDisplayComment?: any;
 }
 
 const OptionPost = (props: IOptionPost) => {
-  const { isModalOpen, onCloseOptionPost, owner, postId, userId } = props;
+  const {
+    isModalOpen,
+    onCloseOptionPost,
+    owner,
+    postId,
+    userId,
+    displayLikeCount,
+    setDisplayLikeCount,
+    setDisplayComment,
+    displayComment,
+  } = props;
   const [loadingDelete, setLoadingDelete] = useState(false);
 
   const handleSetAllPost = useAllPostAction();
@@ -52,18 +66,6 @@ const OptionPost = (props: IOptionPost) => {
   //Call when user cancel modal or click X button:
   const handleCancelModal = () => {
     onCloseOptionPost();
-  };
-
-  const handleClickOption = (key: string) => {
-    if (key === optionKey.CANCEL) {
-      onCloseOptionPost();
-    }
-    if (key === optionKey.DELETE) {
-      onOpenDiscardPost();
-    }
-    if (key === optionKey.EDIT) {
-      onOpenUpdatePost();
-    }
   };
 
   const handleDeletePost = async () => {
@@ -99,6 +101,80 @@ const OptionPost = (props: IOptionPost) => {
     }
   };
 
+  const getCoresspondingLikeCount = (arr: any) => {
+    const itemCoressponding = arr.find((item: any) => item.postId === postId);
+
+    return itemCoressponding;
+  };
+
+  const renderLabel = (name: string, otherName: string, key: string) => {
+    const itemCoressponding = getCoresspondingLikeCount(displayLikeCount);
+    const itemCoressponding1 = getCoresspondingLikeCount(displayComment);
+
+    if (key === optionKey.HIDE_LIKE_COUNT) {
+      return itemCoressponding?.status ? name : otherName;
+    }
+    if (key === optionKey.TURN_OFF_COMMENTING) {
+      return itemCoressponding1?.status ? name : otherName;
+    }
+    return name;
+  };
+
+
+
+  const handleClickOption = (name: string, otherName: string, key: string) => {
+    const label = renderLabel(name, otherName, key);
+
+    const newArr1 = [...displayComment];
+    const item1 = getCoresspondingLikeCount(newArr1);
+    const newArr = [...displayLikeCount];
+    const item = getCoresspondingLikeCount(newArr);
+
+    if (key === optionKey.CANCEL) {
+      onCloseOptionPost();
+    }
+    if (key === optionKey.DELETE) {
+      onOpenDiscardPost();
+    }
+    if (key === optionKey.EDIT) {
+      onOpenUpdatePost();
+    }
+    if (key == optionKey.HIDE_LIKE_COUNT && label.includes("Hide like count")) {
+      item.status = false;
+      setDisplayLikeCount(newArr);
+      localStorage.setItem("likeCount", JSON.stringify(newArr));
+    }
+    if (
+      key == optionKey.HIDE_LIKE_COUNT &&
+      label.includes("Un hide like count")
+    ) {
+      item.status = true;
+      setDisplayLikeCount(newArr);
+      localStorage.setItem("likeCount", JSON.stringify(newArr));
+    }
+    if (
+      key === optionKey.TURN_OFF_COMMENTING &&
+      label.includes("Turn off commenting")
+    ) {
+      item1.status = false;
+      setDisplayComment(newArr1);
+      localStorage.setItem("displayCmt", JSON.stringify(newArr1));
+    }
+    if (
+      key === optionKey.TURN_OFF_COMMENTING &&
+      label.includes("Turn on commenting")
+    ) {
+      item1.status = true;
+      setDisplayComment(newArr1);
+      localStorage.setItem("displayCmt", JSON.stringify(newArr1));
+    }
+  };
+
+  useEffect(() => {
+    setDisplayLikeCount(JSON.parse(localStorage.getItem("likeCount")!));
+    setDisplayComment(JSON.parse(localStorage.getItem("displayCmt")!));
+  }, [setDisplayLikeCount, setDisplayComment]);
+
   const renderOption = (options: any) => {
     return options.map((item: any, key: string) => (
       <div
@@ -106,9 +182,11 @@ const OptionPost = (props: IOptionPost) => {
           "option--red": item.warning,
         })}
         key={key}
-        onClick={() => handleClickOption(item.key)}
+        onClick={() =>
+          handleClickOption(item.name, item.opposite_name, item.key)
+        }
       >
-        {item.name}
+        {renderLabel(item.name, item.opposite_name, item.key)}
       </div>
     ));
   };

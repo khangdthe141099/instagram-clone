@@ -7,6 +7,7 @@ const postSchema = new Schema(
     likes: { type: Array, required: false, default: [] },
     comments: { type: Array, required: false, default: [] },
     postDesc: { type: String, required: false, default: "" },
+    displayLikeCount: { type: Boolean, required: false, default: true}
   },
   {
     timestamps: true,

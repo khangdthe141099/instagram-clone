@@ -12,7 +12,9 @@ import { useGetCurrentUser } from "@/pages/login/hooks";
 interface ActionProps {
   info?: any;
   userId?: string;
-  postId?: string
+  postId?: string;
+  displayLikeCount?: any;
+  displayComment?: any;
 }
 
 const Picker = dynamic(
@@ -24,7 +26,13 @@ const Picker = dynamic(
 
 const { Text } = Typography;
 
-const Action = ({ info, userId, postId }: ActionProps) => {
+const Action = ({
+  info,
+  userId,
+  postId,
+  displayLikeCount,
+  displayComment,
+}: ActionProps) => {
   const { currentUser } = useGetCurrentUser(userId!) as any;
 
   const { comments, likes, postDesc } = info;
@@ -76,7 +84,12 @@ const Action = ({ info, userId, postId }: ActionProps) => {
       </div>
 
       <Text className="like-count">
-        {likes?.length} {likes?.length > 1 ? "likes" : "like"}
+        {displayLikeCount()?.status ? likes?.length : "Liked by Dam tuan khang"}
+        {displayLikeCount()?.status
+          ? likes?.length > 1
+            ? " likes"
+            : " like"
+          : ""}
       </Text>
 
       <div className="post-desc">
@@ -87,37 +100,41 @@ const Action = ({ info, userId, postId }: ActionProps) => {
 
         {comments?.length ? (
           <>
-            <div className="post-desc--bottom">View all {comments?.length} comments</div>
-            <Comment type={COMMENT_TYPE.LESS} postId={postId} userId={userId}/>
+            <div className="post-desc--bottom">
+              View all {comments?.length} comments
+            </div>
+            <Comment type={COMMENT_TYPE.LESS} postId={postId} userId={userId} />
           </>
         ) : null}
       </div>
 
-      <div className="post-comment">
-        <input
-          value={commentText}
-          onChange={handlePostComment}
-          placeholder="Add a comment..."
-          className="post-comment--input"
-          type="text"
-        />
-        {commentText && <Text className="post-comment--text">Post</Text>}
-        <Popover
-          content={<Picker width={300} height={350} />}
-          title="Title"
-          trigger="click"
-          open={open}
-          onOpenChange={handleOpenChange}
-        >
-          <Image
-            style={{ cursor: "pointer" }}
-            width={13}
-            height={13}
-            src={"/svg/components/post/EmojiIcon.svg"}
-            alt="Emoji Icon"
+      {displayComment()?.status && (
+        <div className="post-comment">
+          <input
+            value={commentText}
+            onChange={handlePostComment}
+            placeholder="Add a comment..."
+            className="post-comment--input"
+            type="text"
           />
-        </Popover>
-      </div>
+          {commentText && <Text className="post-comment--text">Post</Text>}
+          <Popover
+            content={<Picker width={300} height={350} />}
+            title="Title"
+            trigger="click"
+            open={open}
+            onOpenChange={handleOpenChange}
+          >
+            <Image
+              style={{ cursor: "pointer" }}
+              width={13}
+              height={13}
+              src={"/svg/components/post/EmojiIcon.svg"}
+              alt="Emoji Icon"
+            />
+          </Popover>
+        </div>
+      )}
     </div>
   );
 };

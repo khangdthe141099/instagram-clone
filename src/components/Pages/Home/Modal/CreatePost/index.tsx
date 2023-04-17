@@ -121,17 +121,14 @@ const CreatePost = (props: ICreatePost) => {
         postDesc: captionValue || "",
       })
       .then((res: any) => {
+        handleResetValue();
         currentPost.push(res?.data?.post);
         sortCurrenPost(currentPost);
         handleSetAllPost(currentPost);
 
         onCloseCreatePost();
 
-        toast(TOAST_TEXT.CREATE_POST.SUCCESS, {
-          onClose: () => {
-            handleResetValue();
-          },
-        });
+        toast(TOAST_TEXT.CREATE_POST.SUCCESS);
         setLoading(false);
       })
       .catch((err) => {
