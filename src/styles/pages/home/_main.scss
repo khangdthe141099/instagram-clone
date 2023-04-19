@@ -4,6 +4,7 @@
 @import './modal/create-post';
 @import './modal/discard-post';
 @import './modal/option-post';
+@import './modal/list-like';
 
 .homepage {
     width: calc(100% - $nav_medium_width);

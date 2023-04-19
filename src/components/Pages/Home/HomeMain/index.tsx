@@ -6,9 +6,11 @@ import {
   useGetCurrentUser,
   useGetCurrentPost,
   useGetAllUser,
+  useGetAllComment
 } from "@/pages/login/hooks";
 import { useUserAction, useLoginMethod } from "@/store/user/selector";
 import { useAllPostAction, useAllPost } from "@/store/post/selector";
+import { useAllCommentAction, useAllComment } from '@/store/comment/selector';
 import { LOGIN_TYPE, LIMIT_DEFAULT, OFF_SET_DEFAULT } from "@/constant";
 import Loading from "@/components/Loading";
 import PostSkeleton from "@/components/AppSkeleton/PostSkeleton";
@@ -35,8 +37,11 @@ const HomeMain: FC = () => {
   const allPost = useAllPost();
   const { currentPost, isLoading: loadingPost, total } = useGetCurrentPost();
 
+  const { allComment, isLoading } = useGetAllComment()
+
   const handleSetUserDetail = useUserAction();
   const handleSetAllPost = useAllPostAction();
+  const handleSetAllComment = useAllCommentAction();
 
   //Add more post to current list:
   const fetchMoreData = () => {
@@ -112,6 +117,13 @@ const HomeMain: FC = () => {
     );
   }, [currentPost, handleSetAllPost]);
 
+  useEffect(() => {
+    if(!allComment) return
+
+    if(allComment) handleSetAllComment(allComment)
+  }, [allComment])
+
+
   const renderListPost = () => {
     if (loadingPost) {
       return <PostSkeleton />;
@@ -132,6 +144,7 @@ const HomeMain: FC = () => {
       ));
     }
   };
+  
 
   return (
     <div className="homemain">

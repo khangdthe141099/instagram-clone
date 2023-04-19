@@ -128,7 +128,6 @@ const UpdatePost = (props: IUpdatePost) => {
           postDesc: captionValue || "",
         })
         .then(async (res: any) => {
-          handleResetValue();
           const { data, status }: any = await postService.getAllPost();
 
           sortCurrenPost(data?.post);
@@ -136,6 +135,8 @@ const UpdatePost = (props: IUpdatePost) => {
 
           onCloseUpdatePost();
           onCloseOptionPost();
+
+          handleResetValue();
 
           toast(TOAST_TEXT.UPDATE_POST.SUCCESS);
           setLoading(false);

@@ -17,11 +17,6 @@ export default async function handler(
 
     const { _id, userId, postId, content, likes, replies } = req.body;
 
-    //check duplicates user:
-    const checkExisting = await Comments.findOne({ _id });
-    if (checkExisting)
-      return res.status(422).json({ message: "User already exist...!" });
-
     //hash passwords:
     Comments.create({ userId, postId, content, likes, replies })
       .then((data) => res.status(200).json({ status: true, comment: data }))
@@ -30,6 +25,10 @@ export default async function handler(
     Comments.find()
       .then((data) => res.status(200).json({ comment: data }))
       .catch();
+  } else if (req.method === HTTP_METHOD.DELETE) {
+    Comments.deleteMany({})
+      .then((data) => res.status(200).json({ status: true, comment: data }))
+      .catch((error) => res.status(404).json({ error: error }));
   } else {
     res
       .status(500)

@@ -7,11 +7,12 @@ import classNames from "classnames";
 import DiscardPost from "@/components/Pages/Home/Modal/DiscardPost";
 import { useModal } from "@/hooks/useModal";
 import { postService } from "@/services/postService";
-import { useAllPostAction } from "@/store/post/selector";
+import { useAllPostAction, useAllPost } from "@/store/post/selector";
 import Loading from "@/components/Loading";
 import UpdatePost from "@/components/Pages/Home/Modal/UpdatePost";
 import { sortCurrenPost } from "@/utils";
 import { TOAST_TEXT } from "@/constant";
+import { useRouter } from "next/router";
 
 interface IOptionPost {
   isModalOpen?: boolean;
@@ -50,6 +51,8 @@ const OptionPost = (props: IOptionPost) => {
   const [loadingDelete, setLoadingDelete] = useState(false);
 
   const handleSetAllPost = useAllPostAction();
+  const allPost = useAllPost();
+  const router = useRouter();
 
   const {
     open: openDiscardPost,
@@ -102,14 +105,22 @@ const OptionPost = (props: IOptionPost) => {
   };
 
   const getCoresspondingLikeCount = (arr: any) => {
-    const itemCoressponding = arr.find((item: any) => item.postId === postId);
+    if (!arr) return;
 
+    const itemCoressponding = arr.find((item: any) => item.postId === postId);
+    return itemCoressponding;
+  };
+
+  const getCoresspondingComment = (arr: any) => {
+    if (!arr) return;
+
+    const itemCoressponding = arr.find((item: any) => item.postId === postId);
     return itemCoressponding;
   };
 
   const renderLabel = (name: string, otherName: string, key: string) => {
     const itemCoressponding = getCoresspondingLikeCount(displayLikeCount);
-    const itemCoressponding1 = getCoresspondingLikeCount(displayComment);
+    const itemCoressponding1 = getCoresspondingComment(displayComment);
 
     if (key === optionKey.HIDE_LIKE_COUNT) {
       return itemCoressponding?.status ? name : otherName;
@@ -120,22 +131,23 @@ const OptionPost = (props: IOptionPost) => {
     return name;
   };
 
-
-
   const handleClickOption = (name: string, otherName: string, key: string) => {
     const label = renderLabel(name, otherName, key);
 
     const newArr1 = [...displayComment];
-    const item1 = getCoresspondingLikeCount(newArr1);
+    const item1 = getCoresspondingComment(newArr1);
     const newArr = [...displayLikeCount];
     const item = getCoresspondingLikeCount(newArr);
 
+    //Close modal:
     if (key === optionKey.CANCEL) {
       onCloseOptionPost();
     }
+    //Delete post:
     if (key === optionKey.DELETE) {
       onOpenDiscardPost();
     }
+    //Update post:
     if (key === optionKey.EDIT) {
       onOpenUpdatePost();
     }
@@ -143,6 +155,7 @@ const OptionPost = (props: IOptionPost) => {
       item.status = false;
       setDisplayLikeCount(newArr);
       localStorage.setItem("likeCount", JSON.stringify(newArr));
+      onCloseOptionPost();
     }
     if (
       key == optionKey.HIDE_LIKE_COUNT &&
@@ -151,6 +164,7 @@ const OptionPost = (props: IOptionPost) => {
       item.status = true;
       setDisplayLikeCount(newArr);
       localStorage.setItem("likeCount", JSON.stringify(newArr));
+      onCloseOptionPost();
     }
     if (
       key === optionKey.TURN_OFF_COMMENTING &&
@@ -159,6 +173,7 @@ const OptionPost = (props: IOptionPost) => {
       item1.status = false;
       setDisplayComment(newArr1);
       localStorage.setItem("displayCmt", JSON.stringify(newArr1));
+      onCloseOptionPost();
     }
     if (
       key === optionKey.TURN_OFF_COMMENTING &&
@@ -167,13 +182,18 @@ const OptionPost = (props: IOptionPost) => {
       item1.status = true;
       setDisplayComment(newArr1);
       localStorage.setItem("displayCmt", JSON.stringify(newArr1));
+      onCloseOptionPost();
+    }
+
+    if (key === optionKey.GO_TO_POST) {
+      router.push(`/post/${postId}`);
     }
   };
 
   useEffect(() => {
     setDisplayLikeCount(JSON.parse(localStorage.getItem("likeCount")!));
     setDisplayComment(JSON.parse(localStorage.getItem("displayCmt")!));
-  }, [setDisplayLikeCount, setDisplayComment]);
+  }, [allPost]);
 
   const renderOption = (options: any) => {
     return options.map((item: any, key: string) => (

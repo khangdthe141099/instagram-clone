@@ -1,0 +1,10 @@
+@import "./post-main";
+@import "./post-related";
+
+.postdetail {
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    background-color: $color_white;
+    margin-left: auto;
+}

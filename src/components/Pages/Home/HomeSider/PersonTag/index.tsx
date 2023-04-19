@@ -1,6 +1,7 @@
 import Avatar from "@/components/Avatar";
 import { Typography } from "antd";
 import classNames from "classnames";
+import { useState } from "react";
 
 const { Text } = Typography;
 
@@ -9,41 +10,85 @@ interface IPersonTag {
   height?: number;
   ringWidth?: number;
   ringHeight?: number;
+  nicknameSz?: number;
+  nameSz?: number;
   stories?: any;
   own?: boolean;
+  typeFollow?: "string" | "button";
+  data?: any;
 }
 
 const PersonTag = (props: IPersonTag) => {
-  const { height, ringHeight, ringWidth, stories, width, own = false } = props;
+  const {
+    height,
+    ringHeight,
+    ringWidth,
+    stories,
+    width,
+    own = false,
+    nicknameSz,
+    nameSz,
+    typeFollow,
+    data,
+  } = props;
+
+  const [follow, setFollow] = useState(false);
+
+
+  const followRendering = () => {
+    if (typeFollow === "string") {
+      return (
+        <Text
+          className={classNames("option", {
+            "option--hover": !own,
+          })}
+        >
+          {own ? "Switch" : "Follow"}
+        </Text>
+      );
+    }
+
+    if (typeFollow === "button") {
+      return (
+        <button
+          onClick={() => setFollow((prev) => !prev)}
+          className={classNames("follow-btn", {
+            following: follow,
+          })}
+        >
+          {follow ? "following" : "follow"}
+        </button>
+      );
+    }
+  };
 
   return (
     <div className="persontag">
       <div className="persontag--left">
         <Avatar
           stories={stories?.length > 0 ? stories : []}
-          img={
-            "https://i.pinimg.com/originals/c0/4b/01/c04b017b6b9d1c189e15e6559aeb3ca8.png"
-          }
+          img={data?.profileImg || "/images/user/no_avatar.png"}
           ringWidth={ringWidth}
           ringHeight={ringHeight}
           width={width}
           height={height}
         />
         <div className="info">
-          <Text className="nickname">dt.khaqn_</Text>
-          <Text className={classNames("name", {
-          "suggestName": !own,
-        })}>Dam Tuan Khang</Text>
+          <Text style={{ fontSize: nicknameSz }} className="nickname">
+            {data?.username || 'Unknown user'}
+          </Text>
+          <Text
+            style={{ fontSize: nameSz }}
+            className={classNames("name", {
+              suggestName: !own,
+            })}
+          >
+            {data?.email || 'Unknown user'}
+          </Text>
         </div>
       </div>
 
-      <Text
-        className={classNames("option", {
-          "option--hover": !own,
-        })}
-      >
-        {own ? "Switch" : "Follow"}
-      </Text>
+      {followRendering()}
     </div>
   );
 };

@@ -2,7 +2,7 @@ import { postService } from "@/services/postService";
 import { useEffect, useState } from "react";
 import { HTTP_STATUS_CONSTANTS } from "@/constant";
 
-export const useGetPostById = (postId: string) => {
+export const useGetPostById = (postId: any) => {
     const [isLoading, setIsLoading] = useState(false);
     const [currentPost, setCurrentPost] = useState([]);
   

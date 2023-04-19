@@ -1,14 +1,22 @@
+export const ACTION_KEY = {
+  LIKE: "like",
+  COMMENT: "comment",
+  SHARE: "share",
+};
+
 export const action = [
   {
     id: 1,
+    key: ACTION_KEY.LIKE,
     name: "Like",
     icon: "/svg/components/post/LoveIcon.svg",
-    activeIcon: '"/svg/components/post/LoveActiveIcon.svg"',
+    activeIcon: "/svg/components/post/LoveActiveIcon.svg",
     width: 24,
     height: 24,
   },
   {
     id: 2,
+    key: ACTION_KEY.COMMENT,
     name: "Comment",
     icon: "/svg/components/post/CommentIcon.svg",
     width: 24,
@@ -16,6 +24,7 @@ export const action = [
   },
   {
     id: 3,
+    key: ACTION_KEY.SHARE,
     name: "Share",
     icon: "/svg/components/post/ShareIcon.svg",
     width: 24,

@@ -102,3 +102,5 @@ export const UNDEFINED = "undefined";
 
 export const LIMIT_DEFAULT = 5
 export const OFF_SET_DEFAULT = 5 
+
+export const MONTH_DATE_FORMAT = 'MMMM D'

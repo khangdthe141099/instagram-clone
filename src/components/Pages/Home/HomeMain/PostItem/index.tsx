@@ -59,8 +59,13 @@ const PostItem = (props: IPostItem) => {
     status: true,
   }));
 
-  const [displayLikeCount, setDisplayLikeCount] = useState<any>(initialState);
-  const [displayComment, setDisplayComment] = useState<any>(initialState1);
+  const [displayLikeCount, setDisplayLikeCount] = useState<any>();
+  const [displayComment, setDisplayComment] = useState<any>();
+
+  useEffect(() => {
+    setDisplayLikeCount(initialState);
+    setDisplayComment(initialState1);
+  }, [allPost]);
 
   const fromNow = moment(createdAt).fromNow();
 
@@ -76,21 +81,6 @@ const PostItem = (props: IPostItem) => {
     onCloseModal: onCloseOptionPost,
   } = useModal();
 
-  const getCoresspondingLikeCount = () => {
-    const itemCoressponding = displayLikeCount.find(
-      (item: any) => item.postId === _id
-    );
-
-    return itemCoressponding;
-  };
-
-  const getCoresspondingComment = () => {
-    const itemCoressponding = displayComment.find(
-      (item: any) => item.postId === _id
-    );
-
-    return itemCoressponding;
-  };
 
   return (
     <>
@@ -137,8 +127,10 @@ const PostItem = (props: IPostItem) => {
             info={rest}
             userId={userId}
             postId={_id}
-            displayLikeCount={getCoresspondingLikeCount}
-            displayComment={getCoresspondingComment}
+            displayLikeCount={displayLikeCount}
+            displayComment={displayComment}
+            setDisplayLikeCount={setDisplayLikeCount}
+            setDisplayComment={setDisplayComment}
           />
         </div>
       </div>

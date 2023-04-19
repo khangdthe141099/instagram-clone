@@ -47,7 +47,6 @@
           border-top: 1px solid $color_ig_separator;
           margin-bottom: 5px;
           max-width: 470px;
-          
 
           font-weight: 400;
           font-family: $font-family-system;
@@ -370,15 +369,20 @@
                 align-items: center;
                 margin-top: 15px;
 
-                input {
+                form {
                   flex: 1;
-                  border: none;
-                  outline: none;
-                }
 
-                input::placeholder {
-                  font-weight: 600;
-                  color: rgb(142, 142, 142);
+                  input {
+                    width: 100%;
+                    border: none;
+                    outline: none;
+                    height: 20px;
+                  }
+
+                  input::placeholder {
+                    font-weight: 600;
+                    color: rgb(142, 142, 142);
+                  }
                 }
 
                 &--text {

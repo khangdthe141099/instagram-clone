@@ -29,8 +29,14 @@ class PostService {
     return publicRequest.delete(`/api/post/${params}`);
   }
 
+  //[Update details post]
   updatePost(id: string, params?: any) {
     return publicRequest.patch(`/api/post/${id}`, params);
+  }
+
+  //[Like Post]:
+  likePost(id: any, params?: any) {
+    return publicRequest.patch(`/api/post/like/${id}`, params);
   }
 }
 

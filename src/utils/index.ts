@@ -49,6 +49,18 @@ export const sortCurrenPost = (posts: any) => {
   });
 };
 
+export const sortCurrenComment = (comments: any) => {
+  return comments?.sort((a: any, b: any) => {
+    const date1 = new Date(a.createdAt).valueOf();
+    const date2 = new Date(b.createdAt).valueOf();
+    return date2 - date1;
+  });
+};
+
+export const isOwner = (userCheck: any, currentUser: any) => {
+  return userCheck?.userId === currentUser?.email
+};
+
 export const useWindowSize = () => {
   const [size, setSize] = useState([0, 0]);
   useEffect(() => {

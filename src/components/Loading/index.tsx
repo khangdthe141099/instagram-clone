@@ -1,17 +1,21 @@
 import type { FC } from "react";
 import Image from "next/image";
 
-interface LoadingProps {}
-
+interface LoadingProps {
+  width?: number;
+  height?: number;
+  style?: any;
+}
 
 const Loading = (props: LoadingProps) => {
-  const {} = props;
+  const { width, height, style } = props;
 
   return (
     <Image
+      style={style}
       className="loading-icon"
-      width={24}
-      height={24}
+      width={width || 24}
+      height={height || 24}
       src={"/svg/loading.svg"}
       alt="More option"
     />

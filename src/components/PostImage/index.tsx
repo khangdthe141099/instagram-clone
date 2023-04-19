@@ -4,10 +4,12 @@ import { useRef, useState } from "react";
 
 interface PostImageProps {
   postUrl?: string[];
+  widthImg?: number;
+  heightImg?: number;
 }
 
 const PostImage = (props: PostImageProps) => {
-  const { postUrl } = props;
+  const { postUrl, widthImg, heightImg } = props;
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -43,8 +45,8 @@ const PostImage = (props: PostImageProps) => {
         {postUrl?.map((url: any, index) => (
           <Image
             key={index}
-            width={550}
-            height={468}
+            width={widthImg || 550}
+            height={heightImg || 468}
             src={url?.thumbUrl}
             alt="More option"
           />

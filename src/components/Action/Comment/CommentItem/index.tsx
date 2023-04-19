@@ -3,26 +3,29 @@ import Image from "next/image";
 import Avatar from "@/components/Avatar";
 import { Typography } from "antd";
 import { useGetCurrentUser } from "@/pages/login/hooks";
+import moment from "moment";
 
 type CommentItemProps = {
   item?: any;
-  userId?: string;
 };
 
 const { Text } = Typography;
 
-const CommentItem = ({ item, userId }: CommentItemProps) => {
+const CommentItem = ({ item }: CommentItemProps) => {
   const [isViewReply, setIsViewReply] = useState<boolean>(false);
+
+  const userId = item?.userId
 
   const { currentUser } = useGetCurrentUser(userId!) as any;
 
+  const fromNow = moment(item?.createdAt).fromNow();
 
   return (
     <>
       <div className="comment-top">
         <div className="comment-left">
           <Avatar
-            img={currentUser?.profileImg}
+            img={currentUser?.profileImg || '/images/user/no_avatar.png'}
             ringWidth={40}
             ringHeight={40}
             width={36}
@@ -35,7 +38,7 @@ const CommentItem = ({ item, userId }: CommentItemProps) => {
               <Text className="desc">{item?.content}</Text>
             </div>
             <div className="comment-info--bottom">
-              <Text className="time">{item?.createdAt}</Text>
+              <Text className="time">{fromNow}</Text>
               <Text className="like">
                 {item?.like?.length} {item?.like?.length > 1 ? "likes" : "like"}
               </Text>

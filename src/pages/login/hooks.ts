@@ -1,5 +1,6 @@
 import { userService } from "@/services/userService";
 import { postService } from "@/services/postService";
+import { commentService } from '@/services/commentService';
 import { useEffect, useState } from "react";
 import { HTTP_STATUS_CONSTANTS } from "@/constant";
 
@@ -100,6 +101,38 @@ export const useGetCurrentPost = () => {
     isLoading,
     currentPost,
     total
+  };
+};
+
+
+export const useGetAllComment = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [allComment, setAllComment] = useState([]);
+
+  useEffect(() => {
+    const setDefaultValue = () => {
+      setIsLoading(false);
+      setAllComment([]);
+    };
+
+    (async () => {
+      setIsLoading(true);
+
+      try {
+        const { data, status }: any = await commentService.getAllComment();
+
+        if (status === HTTP_STATUS_CONSTANTS.OK) setAllComment(data.comment);
+      } catch (e) {
+        setDefaultValue();
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, []);
+
+  return {
+    isLoading,
+    allComment,
   };
 };
 
