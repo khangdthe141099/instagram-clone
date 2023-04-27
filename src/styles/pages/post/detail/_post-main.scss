@@ -3,9 +3,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-bottom: 20px;
 
   .postmain-wrapper {
-    width: 815px;
+    width: 935px;
     height: 600px;
     display: flex;
     border: 1px solid rgb(239, 239, 239);
@@ -13,12 +14,16 @@
     margin-bottom: 30px;
 
     &--left {
-      width: 479px;
+      width: 600px;
       height: 100%;
       position: relative;
       border-radius: 4px;
       border: 1px solid rgb(239, 239, 239);
       background-color: rgb(255, 255, 255);
+
+      .postmain-loading {
+       
+      }
 
       .post-btn {
         position: absolute;
@@ -124,6 +129,27 @@
         height: 381px;
         overflow: scroll;
         padding: 15px 10px;
+
+        .no-comment {
+          width: 100%;
+          height: 94%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+
+          .title {
+            font-size: 24px;
+            line-height: 28px;
+            font-weight: 700;
+          }
+
+          .detail {
+            margin-top: 5px;
+            font-size: 16px;
+            line-height: 18px;
+          }
+        }
 
         .postmain-user {
           width: 100%;

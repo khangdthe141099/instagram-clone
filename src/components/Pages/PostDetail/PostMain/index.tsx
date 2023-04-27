@@ -11,7 +11,11 @@ import Loading from "@/components/Loading";
 import { Picker, sortCurrenComment, isOwner } from "@/utils";
 import { useRouter } from "next/router";
 import { useGetPostById } from "@/components/Pages/Home/Modal/UpdatePost/hooks";
-import { useGetCurrentUser, useGetAllUser } from "@/pages/login/hooks";
+import {
+  useGetCurrentUser,
+  useGetAllUser,
+  useGetAllComment,
+} from "@/pages/login/hooks";
 import moment from "moment";
 import { useAllComment, useAllCommentAction } from "@/store/comment/selector";
 import { useUserDetail } from "@/store/user/selector";
@@ -19,15 +23,25 @@ import { commentService } from "@/services/commentService";
 import { postService } from "@/services/postService";
 import ListLikeModal from "@/components/Pages/Home/Modal/ListLikeModal";
 import { useModal } from "@/hooks/useModal";
+import NoComment from "./NoData/NoComment";
+import NoLike from "./NoData/NoLike";
+import PostSkeleton from "@/components/AppSkeleton/PostSkeleton";
+import OptionPost from "@/components/Pages/Home/Modal/OptionModal";
+import { useAllPostAction, useAllPost } from "@/store/post/selector";
+import { TYPE_OPTION_MODAL } from "@/constant";
 
 const { Text } = Typography;
 
 function PostMain() {
-  const onOpenOptionPost = () => {};
   const { open: openModal, onOpenModal, onCloseModal } = useModal();
 
-  const [liked, setLiked] = useState(false);
+  const {
+    open: openOptionPost,
+    onOpenModal: onOpenOptionPost,
+    onCloseModal: onCloseOptionPost,
+  } = useModal();
 
+  const [liked, setLiked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [open, setOpen] = useState(false);
@@ -38,19 +52,41 @@ function PostMain() {
 
   const route = useRouter();
   const { postId } = route.query;
-
   const { currentPost, isLoading } = useGetPostById(postId) as any;
   const { currentUser } = useGetCurrentUser(currentPost?.userId) as any;
   const userDetail = useUserDetail();
   const { allUser } = useGetAllUser();
-
-  //Check if the current user is the post author or not
-  const owner = isOwner(currentPost, userDetail);
-
+  const { allComment, isLoading: loadingComment } = useGetAllComment();
+  const allPost = useAllPost();
   const comments = useAllComment();
   const handleSetAllComment = useAllCommentAction();
-
+  //Check if the current user is the post author or not
+  const owner = isOwner(currentPost, userDetail);
   const dateFormat = moment(currentPost?.updatedAt).format(MONTH_DATE_FORMAT);
+
+  //============START ON OFF HIDE LIKE COUNT AND COMMENT ========
+  const initialState = allPost.map((item: any, index: string) => ({
+    postId: item._id,
+    status: true,
+  }));
+
+  const initialState1 = allPost.map((item: any, index: string) => ({
+    postId: item._id,
+    status: true,
+  }));
+
+  const [displayLikeCount, setDisplayLikeCount] = useState<any>(initialState);
+  const [displayComment, setDisplayComment] = useState<any>(initialState1);
+
+  const getCoresspondingComment = () => {
+    const itemCoressponding = displayComment?.find(
+      (item: any) => item.postId === postId
+    );
+
+    return itemCoressponding;
+  };
+
+  //============END ON OFF HIDE LIKE COUNT AND COMMENT ========
 
   //============ START LIKE ACTION =========================
   const checkExistLike = (arr: any) => {
@@ -58,6 +94,19 @@ function PostMain() {
       const idx = arr?.findIndex((item: any) => item === userDetail?.email);
 
       return idx;
+    }
+  };
+
+  const renderLikeCount = () => {
+    if (likeCount > 0 && !isLoading) {
+      return `${likeCount} ${likeCount > 1 ? "likes" : "like"}`;
+    }
+    if (likeCount <= 0 && !isLoading) return <NoLike />;
+  };
+
+  const handleOpenListLike = () => {
+    if (likeCount > 0) {
+      onOpenModal();
     }
   };
 
@@ -136,11 +185,25 @@ function PostMain() {
     setOpen(newOpen);
   };
 
+  const renderComment = () => {
+    if (!loadingComment && comment?.length > 0) {
+      return <Comment type={COMMENT_TYPE.LESS} comment={comment} />;
+    }
+
+    if (!loadingComment && comment?.length <= 0) return <NoComment />;
+  };
+
   useEffect(() => {
     const comment = comments?.filter((item: any) => item.postId === postId);
     sortCurrenComment(comment);
     setComment(comment);
   }, [comments, postId]);
+
+  useEffect(() => {
+    if (!allComment) return;
+
+    if (allComment) handleSetAllComment(allComment);
+  }, [allComment]);
   //============ END COMMENT ACTION ========================
 
   //Like actions:
@@ -211,11 +274,17 @@ function PostMain() {
         {mounted && (
           <div className="postmain-wrapper">
             <div className="postmain-wrapper--left">
-              <PostImage
-                postUrl={currentPost?.postUrl}
-                widthImg={479}
-                heightImg={600}
-              />
+              {currentPost?.postUrl ? (
+                <PostImage
+                  postUrl={currentPost?.postUrl}
+                  widthImg={479}
+                  heightImg={600}
+                />
+              ) : (
+                <div className="postmain-loading">
+                  <PostSkeleton hasHeader={false} heightImg={597} />
+                </div>
+              )}
             </div>
 
             <div className="postmain-wrapper--right">
@@ -265,33 +334,31 @@ function PostMain() {
               </div>
 
               <div className="postmain-listcmt">
-                {comment?.length > 0 ? (
-                  <>
-                    <div className="postmain-user">
-                      <Text className="username">
-                        {currentUser?.username || (
-                          <Skeleton.Input
-                            style={{ height: 10 }}
-                            active={true}
-                            size={"small"}
-                            block={true}
-                          />
-                        )}
-                      </Text>
-                      <Text className="desc">
-                        {currentPost?.postDesc || (
-                          <Skeleton.Input
-                            style={{ height: 10 }}
-                            active={true}
-                            size={"small"}
-                            block={true}
-                          />
-                        )}
-                      </Text>
-                    </div>
-                    <Comment type={COMMENT_TYPE.LESS} comment={comment} />
-                  </>
-                ) : null}
+                <div className="postmain-user">
+                  <Text className="username">
+                    {currentUser?.username || (
+                      <Skeleton.Input
+                        style={{ height: 10 }}
+                        active={true}
+                        size={"small"}
+                        block={true}
+                      />
+                    )}
+                  </Text>
+                  <Text className="desc">
+                    {!isLoading && currentPost ? (
+                      currentPost?.postDesc
+                    ) : (
+                      <Skeleton.Input
+                        style={{ height: 10 }}
+                        active={true}
+                        size={"small"}
+                        block={true}
+                      />
+                    )}
+                  </Text>
+                </div>
+                {renderComment()}
               </div>
 
               <div className="postmain-action">
@@ -312,52 +379,54 @@ function PostMain() {
               </div>
 
               <div className="time">
-                <Text onClick={onOpenModal} className="like-count">
-                  {likeCount} {likeCount > 1 ? "likes" : "like"}
+                <Text onClick={handleOpenListLike} className="like-count">
+                  {renderLikeCount()}
                 </Text>
                 <Text className="date">{dateFormat}</Text>
               </div>
 
-              <div className="postmain-comment">
-                <form onSubmit={handlePostComment}>
-                  <input
-                    value={commentText}
-                    onChange={handleCommentChange}
-                    placeholder="Add a comment..."
-                    className="post-comment--input"
-                    type="text"
-                  />
-                </form>
-                <Text
-                  onClick={handlePostComment}
-                  className={classNames("post-comment--text", {
-                    "post-comment--text-disabled": !commentText,
-                  })}
-                >
-                  {loading ? <Loading width={18} height={18} /> : "Post"}
-                </Text>
-                <Popover
-                  content={
-                    <Picker
-                      onEmojiClick={handleEmojiClick}
-                      width={300}
-                      height={350}
+              {getCoresspondingComment()?.status && (
+                <div className="postmain-comment">
+                  <form onSubmit={handlePostComment}>
+                    <input
+                      value={commentText}
+                      onChange={handleCommentChange}
+                      placeholder="Add a comment..."
+                      className="post-comment--input"
+                      type="text"
                     />
-                  }
-                  title="Pick you emoji"
-                  trigger="click"
-                  open={open}
-                  onOpenChange={handleOpenChange}
-                >
-                  <Image
-                    style={{ cursor: "pointer" }}
-                    width={24}
-                    height={24}
-                    src={"/svg/components/post/EmojiIcon.svg"}
-                    alt="Emoji Icon"
-                  />
-                </Popover>
-              </div>
+                  </form>
+                  <Text
+                    onClick={handlePostComment}
+                    className={classNames("post-comment--text", {
+                      "post-comment--text-disabled": !commentText,
+                    })}
+                  >
+                    {loading ? <Loading width={18} height={18} /> : "Post"}
+                  </Text>
+                  <Popover
+                    content={
+                      <Picker
+                        onEmojiClick={handleEmojiClick}
+                        width={300}
+                        height={350}
+                      />
+                    }
+                    title="Pick you emoji"
+                    trigger="click"
+                    open={open}
+                    onOpenChange={handleOpenChange}
+                  >
+                    <Image
+                      style={{ cursor: "pointer" }}
+                      width={24}
+                      height={24}
+                      src={"/svg/components/post/EmojiIcon.svg"}
+                      alt="Emoji Icon"
+                    />
+                  </Popover>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -366,6 +435,18 @@ function PostMain() {
         listUserLike={listUserLike}
         isModalOpen={openModal}
         onCloseModal={onCloseModal}
+      />
+      <OptionPost
+        typeModal={TYPE_OPTION_MODAL.DETAIL}
+        owner={owner}
+        isModalOpen={openOptionPost}
+        onCloseOptionPost={onCloseOptionPost}
+        postId={postId}
+        userId={currentPost?.userId}
+        setDisplayLikeCount={setDisplayLikeCount}
+        displayLikeCount={displayLikeCount}
+        displayComment={displayComment}
+        setDisplayComment={setDisplayComment}
       />
     </>
   );

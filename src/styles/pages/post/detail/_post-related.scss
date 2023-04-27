@@ -1,0 +1,35 @@
+.relatedposts {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .relatedposts-wrapper {
+    width: 935px;
+    height: 600px;
+    border-top: 1.5px solid rgb(219,219,219);
+    padding-top: 30px;
+
+    .title {
+        color: #737373;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 600;
+
+      .name {
+        color: #262626;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:hover {
+            opacity: .5;
+        }
+      }
+    }
+
+    .more-post-list {
+        padding-top: 10px;
+    }
+  }
+}

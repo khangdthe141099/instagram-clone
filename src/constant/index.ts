@@ -97,6 +97,11 @@ export const TOAST_TEXT = {
   },
 };
 
+export const TYPE_OPTION_MODAL = {
+  DETAIL: 'detail',
+  ALL: 'all',
+}
+
 export const MAX_LENGTH_IMAGE_CREATE = 10;
 export const UNDEFINED = "undefined";
 
@@ -104,3 +109,4 @@ export const LIMIT_DEFAULT = 5
 export const OFF_SET_DEFAULT = 5 
 
 export const MONTH_DATE_FORMAT = 'MMMM D'
+export const MONTH_YEAR_FORMAT = 'MMMM YYYY'

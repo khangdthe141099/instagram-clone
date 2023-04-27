@@ -10,7 +10,7 @@ const PostDetail: NextPageWithLayout = () => {
   return (
     <div className="postdetail">
       <PostMain />
-      {/* <RelatedPosts /> */}
+      <RelatedPosts />
     </div>
   );
 };

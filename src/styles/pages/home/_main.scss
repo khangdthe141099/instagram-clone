@@ -1,18 +1,21 @@
-@import './home-reels';
-@import './home-sider';
-@import './home-main';
-@import './modal/create-post';
-@import './modal/discard-post';
-@import './modal/option-post';
-@import './modal/list-like';
+@import "./home-reels";
+@import "./home-sider";
+@import "./home-main";
+@import "./modal/create-post";
+@import "./modal/discard-post";
+@import "./modal/option-post";
+@import "./modal/list-like";
+@import "./modal/report";
+@import "./modal/report-success";
+@import "./modal/detail-account";
 
 .homepage {
-    width: calc(100% - $nav_medium_width);
-    min-height: 100vh;
-    background-color: $color_white;
-    display: flex;
-    flex-flow: row nowrap;
-    margin-left: auto;
-    align-items: stretch;
-    margin-top: 32px;
+  width: calc(100% - $nav_medium_width);
+  min-height: 100vh;
+  background-color: $color_white;
+  display: flex;
+  flex-flow: row nowrap;
+  margin-left: auto;
+  align-items: stretch;
+  margin-top: 32px;
 }

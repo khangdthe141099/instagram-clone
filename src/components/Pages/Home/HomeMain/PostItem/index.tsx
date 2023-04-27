@@ -3,13 +3,15 @@ import Image from "next/image";
 
 import PostImage from "@/components/PostImage";
 import Action from "@/components/Action";
-import { useGetCurrentUser } from "@/pages/login/hooks";
+import { useGetCurrentUser,  } from "@/pages/login/hooks";
 import { useUserDetail } from "@/store/user/selector";
 import OptionPost from "@/components/Pages/Home/Modal/OptionModal";
 import { useModal } from "@/hooks/useModal";
 import moment from "moment";
 import { useRef, useState, useEffect } from "react";
 import { useAllPostAction, useAllPost } from "@/store/post/selector";
+import { Skeleton } from "antd";
+import { useGetPostById } from "@/components/Pages/Home/Modal/UpdatePost/hooks";
 
 type Comment = {
   peopleId?: string | number;
@@ -47,6 +49,13 @@ moment.updateLocale("en", {
 const PostItem = (props: IPostItem) => {
   const { _id, postUrl, createdAt, userId, ...rest } = props;
 
+  const [liked, setLiked] = useState<any>(false); //check display like icon
+  const [likeCount, setLikeCount] = useState<any>(null); //number of like count
+  const [textHideLike, setTextHideLike] = useState<any>(); //Content of text when click hide like count
+  const [listUserLike, setListUserLike] = useState<any>([]);
+
+  const { currentPost } = useGetPostById(_id) as any;
+
   const allPost = useAllPost();
 
   const initialState = allPost.map((item: any, index: string) => ({
@@ -59,13 +68,8 @@ const PostItem = (props: IPostItem) => {
     status: true,
   }));
 
-  const [displayLikeCount, setDisplayLikeCount] = useState<any>();
-  const [displayComment, setDisplayComment] = useState<any>();
-
-  useEffect(() => {
-    setDisplayLikeCount(initialState);
-    setDisplayComment(initialState1);
-  }, [allPost]);
+  const [displayLikeCount, setDisplayLikeCount] = useState<any>(initialState);
+  const [displayComment, setDisplayComment] = useState<any>(initialState1);
 
   const fromNow = moment(createdAt).fromNow();
 
@@ -81,7 +85,6 @@ const PostItem = (props: IPostItem) => {
     onCloseModal: onCloseOptionPost,
   } = useModal();
 
-
   return (
     <>
       <div className="post-item">
@@ -90,20 +93,31 @@ const PostItem = (props: IPostItem) => {
             <div className="avatar">
               <Avatar
                 stories={[]}
-                img={currentUser?.profileImg}
+                img={currentUser?.profileImg || "/images/user/no_avatar.png"}
                 ringWidth={40}
                 ringHeight={40}
                 width={36}
                 height={36}
               />
             </div>
-            <h4>{currentUser?.username}</h4>
-            <div className="time-post">
-              <span>•</span>
-              <time dateTime="2023-03-30T15:28:44.000Z" title="Mar 30, 2023">
-                {fromNow}
-              </time>
-            </div>
+            <h4>
+              {currentUser?.username || (
+                <Skeleton.Input
+                  style={{ height: 10, width: 180, marginTop: 4 }}
+                  active={true}
+                  size={"small"}
+                  block={true}
+                />
+              )}
+            </h4>
+            {fromNow ? (
+              <div className="time-post">
+                <span>•</span>
+                <time dateTime="2023-03-30T15:28:44.000Z" title="Mar 30, 2023">
+                  {fromNow}
+                </time>
+              </div>
+            ) : null}
           </div>
 
           <div onClick={onOpenOptionPost} className="post-item--top-right">
@@ -119,7 +133,15 @@ const PostItem = (props: IPostItem) => {
         </div>
 
         <div className="post-item--body">
-          <PostImage postUrl={postUrl} />
+          <PostImage
+            setLiked={setLiked}
+            setLikeCount={setLikeCount}
+            postUrl={postUrl}
+            postId={_id}
+            setListUserLike={setListUserLike}
+            setTextHideLike={setTextHideLike}
+            currentPost={currentPost}
+          />
         </div>
 
         <div className="post-item--bottom">
@@ -129,8 +151,15 @@ const PostItem = (props: IPostItem) => {
             postId={_id}
             displayLikeCount={displayLikeCount}
             displayComment={displayComment}
-            setDisplayLikeCount={setDisplayLikeCount}
-            setDisplayComment={setDisplayComment}
+            liked={liked}
+            setLiked={setLiked}
+            likeCount={likeCount}
+            setLikeCount={setLikeCount}
+            textHideLike={textHideLike}
+            setTextHideLike={setTextHideLike}
+            listUserLike={listUserLike}
+            setListUserLike={setListUserLike}
+            currentPost={currentPost}
           />
         </div>
       </div>

@@ -10,6 +10,7 @@ interface IPostSkeleton {
   heightLine2?: number | string;
   widthImg?: number | string;
   heightImg?: number | string;
+  hasHeader?: boolean;
 }
 
 function PostSkeleton({
@@ -20,32 +21,36 @@ function PostSkeleton({
   widthLine2 = 10,
   heightLine2 = 10,
   widthImg,
-  heightImg = 450
+  heightImg = 450,
+  hasHeader = true,
 }: IPostSkeleton) {
   return (
     <div className="post-ske-container">
-      <div className="post-ske-top">
-        <Skeleton.Avatar
-          style={{ width: widthAva, height: heightAva }}
-          className="post-ske-ava"
-          active={true}
-          size={"default"}
-        />
-        <div className="post-ske-title">
-          <Skeleton.Input
-            style={{ height: heightLine1 }}
+      {hasHeader && (
+        <div className="post-ske-top">
+          <Skeleton.Avatar
+            style={{ width: widthAva, height: heightAva }}
+            className="post-ske-ava"
             active={true}
-            size={"small"}
-            block={true}
+            size={"default"}
           />
-          <Skeleton.Input
-            style={{ height: heightLine2, width: widthLine2 }}
-            active={true}
-            size={"small"}
-            block={true}
-          />
+          <div className="post-ske-title">
+            <Skeleton.Input
+              style={{ height: heightLine1 }}
+              active={true}
+              size={"small"}
+              block={true}
+            />
+            <Skeleton.Input
+              style={{ height: heightLine2, width: widthLine2 }}
+              active={true}
+              size={"small"}
+              block={true}
+            />
+          </div>
         </div>
-      </div>
+      )}
+
       <div className="post-ske-img">
         <Skeleton.Image
           style={{ width: widthImg || "100%", height: heightImg }}

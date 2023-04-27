@@ -5,7 +5,11 @@ import { action, ACTION_KEY } from "./const";
 import Comment from "./Comment";
 import { COMMENT_TYPE } from "@/constant";
 import classNames from "classnames";
-import { useGetCurrentUser, useGetAllUser } from "@/pages/login/hooks";
+import {
+  useGetCurrentUser,
+  useGetAllUser,
+  useGetCurrentPost,
+} from "@/pages/login/hooks";
 import { postService } from "@/services/postService";
 import { useGetPostById } from "@/components/Pages/Home/Modal/UpdatePost/hooks";
 import Link from "next/link";
@@ -16,6 +20,8 @@ import { useAllComment, useAllCommentAction } from "@/store/comment/selector";
 import { Picker, sortCurrenComment } from "@/utils";
 import { commentService } from "@/services/commentService";
 import Loading from "@/components/Loading";
+import { useFocus } from "@/hooks/useFocus";
+import { useRouter } from "next/router";
 
 interface ActionProps {
   info?: any;
@@ -23,8 +29,15 @@ interface ActionProps {
   postId?: string;
   displayLikeCount?: any;
   displayComment?: any;
-  setDisplayLikeCount?: any;
-  setDisplayComment?: any;
+  liked?: any;
+  setLiked?: any;
+  likeCount?: any;
+  setLikeCount?: any; 
+  textHideLike?: any;
+  setTextHideLike?: any;
+  listUserLike?: any;
+  setListUserLike?: any;
+  currentPost?: any;
 }
 
 const { Text } = Typography;
@@ -35,14 +48,22 @@ const Action = ({
   postId,
   displayLikeCount,
   displayComment,
-  setDisplayLikeCount,
-  setDisplayComment,
+  liked,
+  likeCount,
+  setLikeCount,
+  setLiked,
+  listUserLike,
+  setListUserLike,
+  setTextHideLike,
+  textHideLike,
+  currentPost
 }: ActionProps) => {
   const { open: openModal, onOpenModal, onCloseModal } = useModal();
+  const { inputRef, setFocus } = useFocus();
+  const router = useRouter();
 
   const { currentUser } = useGetCurrentUser(userId!) as any;
   const { allUser } = useGetAllUser();
-  const { currentPost } = useGetPostById(postId!) as any;
 
   const { likes, postDesc } = info;
 
@@ -54,11 +75,10 @@ const Action = ({
 
   const [open, setOpen] = useState(false);
   const [commentText, setCommentText] = useState(""); //check display post comment btn
-  const [liked, setLiked] = useState(false); //check display like icon
-  const [likeCount, setLikeCount] = useState<any>(null); //number of like count
-  const [textHideLike, setTextHideLike] = useState<any>(); //Content of text when click hide like count
-  const [listUserLike, setListUserLike] = useState<any>([]);
-  const [comment, setComment] = useState("");
+  const [comment, setComment] = useState({
+    data: null,
+    length: 0,
+  });
   const [loading, setLoading] = useState(false);
 
   const checkExistLike = (arr: any) => {
@@ -70,14 +90,18 @@ const Action = ({
   };
 
   useEffect(() => {
-    setLikeCount(likes?.length);
-  }, [likes, userDetail]);
+    if (likes?.length === 0) {
+      setLiked(false);
+    }
 
-  useEffect(() => {
     const idx = checkExistLike(currentPost?.likes);
 
     setLiked(idx !== -1);
   }, [currentPost?.likes, userDetail]);
+
+  useEffect(() => {
+    setLikeCount(likes?.length);
+  }, [likes, userDetail]);
 
   const listLikedUsersRendering = () => {
     const listLikedUsers: any = allUser?.filter((user: any) =>
@@ -118,9 +142,11 @@ const Action = ({
 
   const handleClickAction = (key: string) => {
     if (key == ACTION_KEY.LIKE) {
-      setLiked((prev) => !prev);
+      setLiked((prev: any) => !prev);
 
       const idx = checkExistLike(currentPost?.likes);
+
+      console.log('idx', idx)
       if (idx === -1) setLikeCount((prev: any) => prev + 1);
       else setLikeCount((prev: any) => prev - 1);
 
@@ -138,7 +164,7 @@ const Action = ({
     }
 
     if (key === ACTION_KEY.COMMENT) {
-      onOpenModal();
+      setFocus();
     }
   };
 
@@ -188,6 +214,12 @@ const Action = ({
     return itemCoressponding;
   };
 
+  const handleOpenListLike = () => {
+    if (likeCount > 0) {
+      onOpenModal();
+    }
+  };
+
   const handlePostComment = async (e: any) => {
     e.preventDefault();
 
@@ -223,7 +255,10 @@ const Action = ({
   useEffect(() => {
     const comment = comments?.filter((item: any) => item.postId === postId);
     sortCurrenComment(comment);
-    setComment(comment);
+    setComment({
+      data: comment.slice(0, 2),
+      length: comment.length,
+    });
   }, [comments, postId]);
 
   return (
@@ -246,7 +281,7 @@ const Action = ({
           </div>
         </div>
 
-        <Text onClick={onOpenModal} className="like-count">
+        <Text onClick={handleOpenListLike} className="like-count">
           {getCoresspondingLikeCount()?.status ? likeCount : textHideLike}
           {getCoresspondingLikeCount()?.status
             ? likeCount > 1
@@ -263,10 +298,13 @@ const Action = ({
 
           {comment?.length > 0 ? (
             <>
-              <div className="post-desc--bottom">
+              <div
+                onClick={() => router.push(`/post/${postId}`)}
+                className="post-desc--bottom"
+              >
                 View all {comment?.length} comments
               </div>
-              <Comment type={COMMENT_TYPE.LESS} comment={comment} />
+              <Comment type={COMMENT_TYPE.LESS} comment={comment?.data} />
             </>
           ) : null}
         </div>
@@ -275,6 +313,7 @@ const Action = ({
           <div className="post-comment">
             <form onSubmit={handlePostComment}>
               <input
+                ref={inputRef}
                 value={commentText}
                 onChange={handleCommentChange}
                 placeholder="Add a comment..."

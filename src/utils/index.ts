@@ -61,6 +61,10 @@ export const isOwner = (userCheck: any, currentUser: any) => {
   return userCheck?.userId === currentUser?.email
 };
 
+export const copyToClipboard = (text: string) => {
+  navigator.clipboard.writeText(text)
+}
+
 export const useWindowSize = () => {
   const [size, setSize] = useState([0, 0]);
   useEffect(() => {

@@ -126,7 +126,7 @@ const HomeMain: FC = () => {
 
   const renderListPost = () => {
     if (loadingPost) {
-      return <PostSkeleton />;
+      return <div className="loading-skeleton"><PostSkeleton /></div>;
     } else {
       // if (allPost && allPost.length === 0)
       //   return (

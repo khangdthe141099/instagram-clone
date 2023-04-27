@@ -1,7 +1,8 @@
 import Avatar from "@/components/Avatar";
 import { Typography } from "antd";
 import classNames from "classnames";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useUserDetail } from "@/store/user/selector";
 
 const { Text } = Typography;
 
@@ -32,35 +33,43 @@ const PersonTag = (props: IPersonTag) => {
     data,
   } = props;
 
-  const [follow, setFollow] = useState(false);
+  const userDetail = useUserDetail();
 
+  const [follow, setFollow] = useState(false);
+  const [owner, setOwner] = useState(true);
 
   const followRendering = () => {
     if (typeFollow === "string") {
       return (
         <Text
           className={classNames("option", {
-            "option--hover": !own,
+            "option--hover": !owner,
           })}
         >
-          {own ? "Switch" : "Follow"}
+          {owner ? "Switch" : "Follow"}
         </Text>
       );
     }
 
     if (typeFollow === "button") {
       return (
-        <button
-          onClick={() => setFollow((prev) => !prev)}
-          className={classNames("follow-btn", {
-            following: follow,
-          })}
-        >
-          {follow ? "following" : "follow"}
-        </button>
+        !owner && (
+          <button
+            onClick={() => setFollow((prev) => !prev)}
+            className={classNames("follow-btn", {
+              following: follow,
+            })}
+          >
+            {follow ? "following" : "follow"}
+          </button>
+        )
       );
     }
   };
+
+  useEffect(() => {
+    if (data && userDetail) setOwner(data?.email === userDetail?.email);
+  }, [data, userDetail]);
 
   return (
     <div className="persontag">
@@ -75,7 +84,7 @@ const PersonTag = (props: IPersonTag) => {
         />
         <div className="info">
           <Text style={{ fontSize: nicknameSz }} className="nickname">
-            {data?.username || 'Unknown user'}
+            {data?.username || "Unknown user"}
           </Text>
           <Text
             style={{ fontSize: nameSz }}
@@ -83,7 +92,7 @@ const PersonTag = (props: IPersonTag) => {
               suggestName: !own,
             })}
           >
-            {data?.email || 'Unknown user'}
+            {data?.email || "Unknown user"}
           </Text>
         </div>
       </div>

@@ -2,7 +2,13 @@ import { Modal } from "antd";
 import React, { ReactNode, useState, useEffect, useMemo } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { options, optionKey, ownOptions } from "./const";
+import {
+  options,
+  optionKey,
+  ownOptions,
+  ownDetailOption,
+  detailOptions,
+} from "./const";
 import classNames from "classnames";
 import DiscardPost from "@/components/Pages/Home/Modal/DiscardPost";
 import { useModal } from "@/hooks/useModal";
@@ -10,9 +16,12 @@ import { postService } from "@/services/postService";
 import { useAllPostAction, useAllPost } from "@/store/post/selector";
 import Loading from "@/components/Loading";
 import UpdatePost from "@/components/Pages/Home/Modal/UpdatePost";
-import { sortCurrenPost } from "@/utils";
+import { sortCurrenPost, copyToClipboard } from "@/utils";
 import { TOAST_TEXT } from "@/constant";
 import { useRouter } from "next/router";
+import { TYPE_OPTION_MODAL } from "@/constant";
+import ReportModal from "@/components/Pages/Home/Modal/ReportModal";
+import DetailAccountModal from "@/components/Pages/Home/Modal/DetailAccount";
 
 interface IOptionPost {
   isModalOpen?: boolean;
@@ -34,6 +43,7 @@ interface IOptionPost {
   displayLikeCount?: any;
   displayComment?: any;
   setDisplayComment?: any;
+  typeModal?: "detail" | "all" | any;
 }
 
 const OptionPost = (props: IOptionPost) => {
@@ -47,6 +57,7 @@ const OptionPost = (props: IOptionPost) => {
     setDisplayLikeCount,
     setDisplayComment,
     displayComment,
+    typeModal,
   } = props;
   const [loadingDelete, setLoadingDelete] = useState(false);
 
@@ -66,11 +77,24 @@ const OptionPost = (props: IOptionPost) => {
     onCloseModal: onCloseUpdatePost,
   } = useModal();
 
+  const {
+    open: openReport,
+    onOpenModal: onOpenReport,
+    onCloseModal: onCloseReport,
+  } = useModal();
+
+  const {
+    open: openDetailAccount,
+    onOpenModal: onOpenDetailAccount,
+    onCloseModal: onCloseDetailAccount,
+  } = useModal();
+
   //Call when user cancel modal or click X button:
   const handleCancelModal = () => {
     onCloseOptionPost();
   };
 
+  //Delete post when user click delete button
   const handleDeletePost = async () => {
     const { data }: any = await postService.getAllPost();
     const allPost = data?.post;
@@ -104,6 +128,7 @@ const OptionPost = (props: IOptionPost) => {
     }
   };
 
+  //Get corresponding display/hide like count:
   const getCoresspondingLikeCount = (arr: any) => {
     if (!arr) return;
 
@@ -111,6 +136,7 @@ const OptionPost = (props: IOptionPost) => {
     return itemCoressponding;
   };
 
+  //Get corresponding display/hide comment:
   const getCoresspondingComment = (arr: any) => {
     if (!arr) return;
 
@@ -118,6 +144,7 @@ const OptionPost = (props: IOptionPost) => {
     return itemCoressponding;
   };
 
+  //Render label option
   const renderLabel = (name: string, otherName: string, key: string) => {
     const itemCoressponding = getCoresspondingLikeCount(displayLikeCount);
     const itemCoressponding1 = getCoresspondingComment(displayComment);
@@ -131,6 +158,7 @@ const OptionPost = (props: IOptionPost) => {
     return name;
   };
 
+  //Handle event when user clicks on options
   const handleClickOption = (name: string, otherName: string, key: string) => {
     const label = renderLabel(name, otherName, key);
 
@@ -188,6 +216,22 @@ const OptionPost = (props: IOptionPost) => {
     if (key === optionKey.GO_TO_POST) {
       router.push(`/post/${postId}`);
     }
+
+    if (key === optionKey.REPORT) {
+      onOpenReport();
+      onCloseOptionPost();
+    }
+
+    if (key === optionKey.COPY_LINK) {
+      copyToClipboard(`${process.env.NEXT_PUBLIC_URL}/post/${postId}`);
+      toast("Link copied to clipboard.");
+      onCloseOptionPost();
+    }
+
+    if (key === optionKey.ABOUT_THIS_ACCOUNT) {
+      onOpenDetailAccount();
+      onCloseOptionPost();
+    }
   };
 
   useEffect(() => {
@@ -195,6 +239,7 @@ const OptionPost = (props: IOptionPost) => {
     setDisplayComment(JSON.parse(localStorage.getItem("displayCmt")!));
   }, [allPost]);
 
+  //Render list options by corresponding array option
   const renderOption = (options: any) => {
     return options.map((item: any, key: string) => (
       <div
@@ -211,6 +256,18 @@ const OptionPost = (props: IOptionPost) => {
     ));
   };
 
+  //Get corresponding array of options for render list option:
+  const getListOptions = () => {
+    if (owner) {
+      return typeModal === TYPE_OPTION_MODAL.DETAIL
+        ? ownDetailOption
+        : ownOptions;
+    }
+    if (!owner) {
+      return typeModal === TYPE_OPTION_MODAL.DETAIL ? detailOptions : options;
+    }
+  };
+
   return (
     <>
       <Modal
@@ -224,7 +281,7 @@ const OptionPost = (props: IOptionPost) => {
         title={null}
       >
         <div className="option-post-wrapper">
-          {renderOption(owner ? ownOptions : options)}
+          {renderOption(getListOptions())}
         </div>
       </Modal>
       <ToastContainer />
@@ -245,6 +302,12 @@ const OptionPost = (props: IOptionPost) => {
         isModalOpen={openUpdatePost}
         onCloseUpdatePost={onCloseUpdatePost}
         onCloseOptionPost={onCloseOptionPost}
+      />
+      <ReportModal isModalOpen={openReport} onCloseModal={onCloseReport} />
+      <DetailAccountModal
+        isModalOpen={openDetailAccount}
+        onCloseModal={onCloseDetailAccount}
+        userId={userId}
       />
     </>
   );

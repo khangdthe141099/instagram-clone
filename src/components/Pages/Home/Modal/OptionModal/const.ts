@@ -60,6 +60,12 @@ export const ownOptions = [
   },
 ];
 
+export const ownDetailOption = ownOptions.filter(
+  (option) =>
+    option.key !== optionKey.HIDE_LIKE_COUNT &&
+    option.key !== optionKey.GO_TO_POST
+);
+
 export const options = [
   {
     id: 1,
@@ -104,3 +110,7 @@ export const options = [
     warning: false,
   },
 ];
+
+export const detailOptions = options.filter(
+  (option) => option.key !== optionKey.GO_TO_POST
+);
