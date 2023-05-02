@@ -17,12 +17,14 @@ export default async function handler(
       .catch();
   } else if (req.method === HTTP_METHOD.DELETE) {
     Posts.findByIdAndDelete({ _id: postId })
+      .sort({ createdAt: -1 })
       .then((data) => res.status(200).json({ post: data }))
       .catch();
   } else if (req.method === HTTP_METHOD.PATCH) {
     Posts.findByIdAndUpdate({ _id: postId }, req.body, {
       new: true,
     })
+      .sort({ createdAt: -1 })
       .then((data) => res.status(200).json({ post: data }))
       .catch((err) => console.log("loi:>", err));
   } else {

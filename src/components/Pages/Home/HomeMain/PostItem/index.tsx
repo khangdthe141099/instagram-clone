@@ -3,13 +3,13 @@ import Image from "next/image";
 
 import PostImage from "@/components/PostImage";
 import Action from "@/components/Action";
-import { useGetCurrentUser,  } from "@/pages/login/hooks";
+import { useGetCurrentUser } from "@/pages/login/hooks";
 import { useUserDetail } from "@/store/user/selector";
 import OptionPost from "@/components/Pages/Home/Modal/OptionModal";
 import { useModal } from "@/hooks/useModal";
 import moment from "moment";
-import { useRef, useState, useEffect } from "react";
-import { useAllPostAction, useAllPost } from "@/store/post/selector";
+import { useState, useEffect } from "react";
+import { useAllPost } from "@/store/post/selector";
 import { Skeleton } from "antd";
 import { useGetPostById } from "@/components/Pages/Home/Modal/UpdatePost/hooks";
 
@@ -71,6 +71,16 @@ const PostItem = (props: IPostItem) => {
   const [displayLikeCount, setDisplayLikeCount] = useState<any>(initialState);
   const [displayComment, setDisplayComment] = useState<any>(initialState1);
 
+  useEffect(() => {
+    setDisplayLikeCount(
+      initialState || JSON.parse(localStorage.getItem("likeCount")!)
+    );
+    setDisplayComment(
+      initialState1 || JSON.parse(localStorage.getItem("displayCmt")!)
+    );
+  }, [allPost]);
+
+
   const fromNow = moment(createdAt).fromNow();
 
   //active user
@@ -118,6 +128,11 @@ const PostItem = (props: IPostItem) => {
                 </time>
               </div>
             ) : null}
+
+            <div className="follow-wrapper">
+              <span className="dot">•</span>
+              <span className="follow">Follow</span>
+            </div>
           </div>
 
           <div onClick={onOpenOptionPost} className="post-item--top-right">
@@ -134,9 +149,9 @@ const PostItem = (props: IPostItem) => {
 
         <div className="post-item--body">
           <PostImage
+            postUrl={postUrl}
             setLiked={setLiked}
             setLikeCount={setLikeCount}
-            postUrl={postUrl}
             postId={_id}
             setListUserLike={setListUserLike}
             setTextHideLike={setTextHideLike}

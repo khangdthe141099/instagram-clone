@@ -6,14 +6,17 @@
   .relatedposts-wrapper {
     width: 935px;
     height: 600px;
-    border-top: 1.5px solid rgb(219,219,219);
+    border-top: 1.5px solid rgb(219, 219, 219);
     padding-top: 30px;
 
     .title {
-        color: #737373;
-        font-size: 14px;
-        line-height: 18px;
-        font-weight: 600;
+      color: #737373;
+      font-size: 14px;
+      line-height: 18px;
+      font-weight: 600;
+      width: 100%;
+      display: flex;
+      align-items: center;
 
       .name {
         color: #262626;
@@ -21,15 +24,93 @@
         line-height: 18px;
         font-weight: 600;
         cursor: pointer;
+        margin-left: 5px;
 
         &:hover {
-            opacity: .5;
+          opacity: 0.5;
         }
       }
     }
 
-    .more-post-list {
-        padding-top: 10px;
+    .post-list {
+      padding-top: 10px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .postmain-loading {
+        display: flex;
+      }
+
+      &--wrapper {
+        display: flex;
+
+        .post-loading {
+          display: flex;
+
+          &--item {
+            margin-right: 3px;
+            margin-bottom: 3px;
+          }
+        }
+
+        .post-item {
+          margin-right: 4px;
+          position: relative;
+
+          &:last-child {
+            margin-right: 0;
+          }
+
+          .mask {
+            background: rgba(0, 0, 0, 0.3);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.2s ease;
+
+            &:hover {
+              opacity: 1;
+            }
+
+            &--item {
+              display: flex;
+              align-items: center;
+              padding: 0 15px;
+
+              .icon {
+                margin-right: 8px;
+                background-repeat: no-repeat;
+                height: 19px;
+                width: 19px;
+                background-image: url("/images/cdn_instagram4.png");
+
+                &--heart {
+                  background-position: -340px -333px;
+                }
+
+                &--comment {
+                  background-position: -382px -333px;
+                }
+              }
+
+              .number {
+                font-size: 16px;
+                line-height: 20px;
+                color: rgb(255, 255, 255);
+                font-weight: 700;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -8,10 +8,8 @@ import classNames from "classnames";
 import {
   useGetCurrentUser,
   useGetAllUser,
-  useGetCurrentPost,
 } from "@/pages/login/hooks";
 import { postService } from "@/services/postService";
-import { useGetPostById } from "@/components/Pages/Home/Modal/UpdatePost/hooks";
 import Link from "next/link";
 import ListLikeModal from "@/components/Pages/Home/Modal/ListLikeModal";
 import { useModal } from "@/hooks/useModal";
@@ -22,6 +20,8 @@ import { commentService } from "@/services/commentService";
 import Loading from "@/components/Loading";
 import { useFocus } from "@/hooks/useFocus";
 import { useRouter } from "next/router";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface ActionProps {
   info?: any;
@@ -32,7 +32,7 @@ interface ActionProps {
   liked?: any;
   setLiked?: any;
   likeCount?: any;
-  setLikeCount?: any; 
+  setLikeCount?: any;
   textHideLike?: any;
   setTextHideLike?: any;
   listUserLike?: any;
@@ -56,7 +56,7 @@ const Action = ({
   setListUserLike,
   setTextHideLike,
   textHideLike,
-  currentPost
+  currentPost,
 }: ActionProps) => {
   const { open: openModal, onOpenModal, onCloseModal } = useModal();
   const { inputRef, setFocus } = useFocus();
@@ -146,7 +146,6 @@ const Action = ({
 
       const idx = checkExistLike(currentPost?.likes);
 
-      console.log('idx', idx)
       if (idx === -1) setLikeCount((prev: any) => prev + 1);
       else setLikeCount((prev: any) => prev - 1);
 
@@ -164,6 +163,13 @@ const Action = ({
     }
 
     if (key === ACTION_KEY.COMMENT) {
+      const comment = getCoresspondingComment();
+
+      if (!comment.status) {
+        toast("Please turn on comment !");
+        return;
+      }
+
       setFocus();
     }
   };
@@ -355,6 +361,7 @@ const Action = ({
         isModalOpen={openModal}
         onCloseModal={onCloseModal}
       />
+      <ToastContainer />
     </>
   );
 };

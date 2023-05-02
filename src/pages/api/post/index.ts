@@ -25,6 +25,7 @@ export default async function handler(
       });
   } else if (req.method === HTTP_METHOD.GET) {
     Posts.find()
+      .sort({ createdAt: -1 })
       .then((data) => res.status(200).json({ post: data, total: data.length }))
       .catch();
   } else {

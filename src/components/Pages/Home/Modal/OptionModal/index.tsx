@@ -1,5 +1,5 @@
 import { Modal } from "antd";
-import React, { ReactNode, useState, useEffect, useMemo } from "react";
+import React, { ReactNode, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -16,7 +16,7 @@ import { postService } from "@/services/postService";
 import { useAllPostAction, useAllPost } from "@/store/post/selector";
 import Loading from "@/components/Loading";
 import UpdatePost from "@/components/Pages/Home/Modal/UpdatePost";
-import { sortCurrenPost, copyToClipboard } from "@/utils";
+import { copyToClipboard } from "@/utils";
 import { TOAST_TEXT } from "@/constant";
 import { useRouter } from "next/router";
 import { TYPE_OPTION_MODAL } from "@/constant";
@@ -44,6 +44,8 @@ interface IOptionPost {
   displayComment?: any;
   setDisplayComment?: any;
   typeModal?: "detail" | "all" | any;
+  initialState?: any;
+  initialState1?: any;
 }
 
 const OptionPost = (props: IOptionPost) => {
@@ -109,8 +111,6 @@ const OptionPost = (props: IOptionPost) => {
             (item: any) => item?._id === postDeleted?._id
           );
           allPost.splice(idx, 1);
-
-          sortCurrenPost(allPost);
 
           handleSetAllPost(allPost);
 
@@ -233,11 +233,6 @@ const OptionPost = (props: IOptionPost) => {
       onCloseOptionPost();
     }
   };
-
-  useEffect(() => {
-    setDisplayLikeCount(JSON.parse(localStorage.getItem("likeCount")!));
-    setDisplayComment(JSON.parse(localStorage.getItem("displayCmt")!));
-  }, [allPost]);
 
   //Render list options by corresponding array option
   const renderOption = (options: any) => {

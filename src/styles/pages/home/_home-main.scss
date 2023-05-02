@@ -137,6 +137,27 @@
                   margin-right: 5px;
                 }
               }
+
+              .follow-wrapper {
+                margin-left: 5px;
+
+                .dot {
+                  color: #8e8e8e;
+                }
+
+                .follow {
+                  color: #0095f6;
+                  font-size: 14px;
+                  line-height: 18px;
+                  font-weight: 600;
+                  cursor: pointer;
+                  margin-left: 5px;
+
+                  &:hover {
+                    color: #00376b;
+                  }
+                }
+              }
             }
 
             &-right {
@@ -442,5 +463,35 @@
   }
   100% {
     transform: scale(1);
+  }
+}
+
+.heart-filled {
+  font-size: 80px;
+  color: white;
+  position: absolute;
+  left: 276px;
+  top: 251px;
+  z-index: 1;
+  opacity: 0;
+
+  &--trigger {
+    animation: slow 0.5s ease;
+  }
+}
+
+@keyframes slow {
+  0% {
+    transform: scale(1.2);
+    opacity: 0.9;
+  }
+  99% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 0;
   }
 }

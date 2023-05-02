@@ -5,7 +5,7 @@ import React, { ReactNode, useEffect, useState } from "react";
 import Image from "next/image";
 import ImgCrop from "antd-img-crop";
 import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
-import { Picker, getBase64, sortCurrenPost } from "@/utils";
+import { Picker, getBase64 } from "@/utils";
 import { MAX_LENGTH_IMAGE_CREATE, TOAST_TEXT } from "@/constant";
 import { postService } from "@/services/postService";
 import { toast, ToastContainer } from "react-toastify";
@@ -130,7 +130,6 @@ const UpdatePost = (props: IUpdatePost) => {
         .then(async (res: any) => {
           const { data, status }: any = await postService.getAllPost();
 
-          sortCurrenPost(data?.post);
           handleSetAllPost(data?.post);
 
           onCloseUpdatePost();

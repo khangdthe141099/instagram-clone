@@ -11,6 +11,7 @@ interface IPostSkeleton {
   widthImg?: number | string;
   heightImg?: number | string;
   hasHeader?: boolean;
+  imgClassname?: string;
 }
 
 function PostSkeleton({
@@ -22,6 +23,7 @@ function PostSkeleton({
   heightLine2 = 10,
   widthImg,
   heightImg = 450,
+  imgClassname,
   hasHeader = true,
 }: IPostSkeleton) {
   return (
@@ -53,6 +55,7 @@ function PostSkeleton({
 
       <div className="post-ske-img">
         <Skeleton.Image
+          className={imgClassname}
           style={{ width: widthImg || "100%", height: heightImg }}
           active={true}
         />

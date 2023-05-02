@@ -27,7 +27,7 @@ import NoComment from "./NoData/NoComment";
 import NoLike from "./NoData/NoLike";
 import PostSkeleton from "@/components/AppSkeleton/PostSkeleton";
 import OptionPost from "@/components/Pages/Home/Modal/OptionModal";
-import { useAllPostAction, useAllPost } from "@/store/post/selector";
+import { useAllPost } from "@/store/post/selector";
 import { TYPE_OPTION_MODAL } from "@/constant";
 
 const { Text } = Typography;
@@ -50,19 +50,32 @@ function PostMain() {
   const [likeCount, setLikeCount] = useState<any>(null);
   const [listUserLike, setListUserLike] = useState<any>([]);
 
+  const [currentPost, setCurrentPost] = useState<any>([]);
+
   const route = useRouter();
   const { postId } = route.query;
-  const { currentPost, isLoading } = useGetPostById(postId) as any;
+  const allPost = useAllPost();
+
+  const { isLoading } = useGetPostById(postId) as any;
+
   const { currentUser } = useGetCurrentUser(currentPost?.userId) as any;
   const userDetail = useUserDetail();
   const { allUser } = useGetAllUser();
+
   const { allComment, isLoading: loadingComment } = useGetAllComment();
-  const allPost = useAllPost();
+
   const comments = useAllComment();
   const handleSetAllComment = useAllCommentAction();
   //Check if the current user is the post author or not
   const owner = isOwner(currentPost, userDetail);
   const dateFormat = moment(currentPost?.updatedAt).format(MONTH_DATE_FORMAT);
+
+  //First render:
+  useEffect(() => {
+    const crrPost = allPost.find((item: any) => item?._id === postId);
+
+    setCurrentPost(crrPost);
+  }, [allPost, postId]);
 
   //============START ON OFF HIDE LIKE COUNT AND COMMENT ========
   const initialState = allPost.map((item: any, index: string) => ({
@@ -77,6 +90,15 @@ function PostMain() {
 
   const [displayLikeCount, setDisplayLikeCount] = useState<any>(initialState);
   const [displayComment, setDisplayComment] = useState<any>(initialState1);
+
+  useEffect(() => {
+    setDisplayLikeCount(
+      initialState || JSON.parse(localStorage.getItem("likeCount")!)
+    );
+    setDisplayComment(
+     initialState1 || JSON.parse(localStorage.getItem("displayCmt")!)
+    );
+  }, [allPost]);
 
   const getCoresspondingComment = () => {
     const itemCoressponding = displayComment?.find(
@@ -279,6 +301,11 @@ function PostMain() {
                   postUrl={currentPost?.postUrl}
                   widthImg={479}
                   heightImg={600}
+                  setLiked={setLiked}
+                  setLikeCount={setLikeCount}
+                  postId={postId as any}
+                  setListUserLike={setListUserLike}
+                  currentPost={currentPost}
                 />
               ) : (
                 <div className="postmain-loading">
@@ -447,6 +474,8 @@ function PostMain() {
         displayLikeCount={displayLikeCount}
         displayComment={displayComment}
         setDisplayComment={setDisplayComment}
+        initialState={initialState}
+        initialState1={initialState1}
       />
     </>
   );

@@ -18,6 +18,8 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { GetServerSideProps } from "next";
 import Loading from "@/components/Loading";
 import { useLoginMethodAction } from "@/store/user/selector";
+import { useGetCurrentPost } from "./hooks";
+import { useAllPostAction } from "@/store/post/selector";
 
 const Login = () => {
   const [isShow, setIsShow] = useState(false);
@@ -31,6 +33,9 @@ const Login = () => {
   });
 
   const handleSetLoginMethod = useLoginMethodAction();
+
+  const { currentPost, isLoading: loadingPost, total } = useGetCurrentPost();
+  const handleSetAllPost = useAllPostAction();
 
   const intervalRef = useRef<number | null | NodeJS.Timer>(null);
 
@@ -88,6 +93,7 @@ const Login = () => {
         });
         setLoading(false);
         handleSetLoginMethod(LOGIN_TYPE.CREDENTIALS);
+        handleSetAllPost(currentPost);
       } else {
         setNoti(true);
         toast("Login failed!, please try again...");
@@ -104,6 +110,7 @@ const Login = () => {
     handleSetLoginMethod(type);
     e.preventDefault();
     signIn(type, { callbackUrl: process.env.NEXT_PUBLIC_URL });
+    handleSetAllPost(currentPost);
   };
 
   useEffect(() => {
@@ -139,6 +146,12 @@ const Login = () => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (!currentPost) return;
+
+    handleSetAllPost(currentPost);
+  }, [currentPost, handleSetAllPost]);
 
   return (
     <div className="loginpage">

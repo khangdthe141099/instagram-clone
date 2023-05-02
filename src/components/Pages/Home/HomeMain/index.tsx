@@ -10,7 +10,7 @@ import {
 } from "@/pages/login/hooks";
 import { useUserAction, useLoginMethod } from "@/store/user/selector";
 import { useAllPostAction, useAllPost } from "@/store/post/selector";
-import { useAllCommentAction, useAllComment } from '@/store/comment/selector';
+import { useAllCommentAction } from '@/store/comment/selector';
 import { LOGIN_TYPE, LIMIT_DEFAULT, OFF_SET_DEFAULT } from "@/constant";
 import Loading from "@/components/Loading";
 import PostSkeleton from "@/components/AppSkeleton/PostSkeleton";
@@ -31,8 +31,6 @@ const HomeMain: FC = () => {
 
   const { allUser } = useGetAllUser();
   const { currentUser } = useGetCurrentUser(data?.user?.email!);
-
-  const postRef = useRef<any>();
 
   const allPost = useAllPost();
   const { currentPost, isLoading: loadingPost, total } = useGetCurrentPost();
@@ -108,13 +106,7 @@ const HomeMain: FC = () => {
   useEffect(() => {
     if (!currentPost) return;
 
-    handleSetAllPost(
-      currentPost?.sort((a: any, b: any) => {
-        const date1 = new Date(a.createdAt).valueOf();
-        const date2 = new Date(b.createdAt).valueOf();
-        return date2 - date1;
-      })
-    );
+    handleSetAllPost(currentPost);
   }, [currentPost, handleSetAllPost]);
 
   useEffect(() => {

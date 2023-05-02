@@ -15,6 +15,7 @@ export default async function handler(
     Posts.findByIdAndUpdate({ _id: postId }, req.body, {
       new: true,
     })
+      .sort({ createdAt: -1 })
       .then((data) => res.status(200).json({ post: data }))
       .catch((err) => console.log("loi:>", err));
   }
