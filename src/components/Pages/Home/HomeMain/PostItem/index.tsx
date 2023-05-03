@@ -58,28 +58,30 @@ const PostItem = (props: IPostItem) => {
 
   const allPost = useAllPost();
 
-  const initialState = allPost.map((item: any, index: string) => ({
-    postId: item._id,
-    status: true,
-  }));
+  const getInitState = () => {
+    return allPost.map((item: any, index: string) => ({
+      postId: item._id,
+      status: true,
+    }));
+  };
 
-  const initialState1 = allPost.map((item: any, index: string) => ({
-    postId: item._id,
-    status: true,
-  }));
+  const initialState = getInitState();
+  const initialState1 = getInitState();
 
-  const [displayLikeCount, setDisplayLikeCount] = useState<any>(initialState);
-  const [displayComment, setDisplayComment] = useState<any>(initialState1);
+  const [displayLikeCount, setDisplayLikeCount] = useState<any>();
+  const [displayComment, setDisplayComment] = useState<any>();
 
   useEffect(() => {
-    setDisplayLikeCount(
-      initialState || JSON.parse(localStorage.getItem("likeCount")!)
-    );
-    setDisplayComment(
-      initialState1 || JSON.parse(localStorage.getItem("displayCmt")!)
-    );
-  }, [allPost]);
+    const likeStorage = JSON.parse(localStorage.getItem("likeCount")!);
+    const commentStorage = JSON.parse(localStorage.getItem("displayCmt")!);
 
+    likeStorage
+      ? setDisplayLikeCount(likeStorage)
+      : setDisplayLikeCount(initialState);
+    commentStorage
+      ? setDisplayComment(commentStorage)
+      : setDisplayComment(initialState1);
+  }, [allPost]);
 
   const fromNow = moment(createdAt).fromNow();
 

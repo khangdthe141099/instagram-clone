@@ -1,0 +1,20 @@
+.profile-detail {
+    width: 100%;
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 44px;
+
+    &--left {
+        width: 292px;
+        height: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 30px;
+    }
+
+    &--right {
+      
+    }
+}

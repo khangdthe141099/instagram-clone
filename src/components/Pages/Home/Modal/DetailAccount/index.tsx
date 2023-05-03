@@ -13,6 +13,7 @@ import { MONTH_YEAR_FORMAT } from "@/constant";
 import { useRegion } from "@/hooks/useRegion";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 interface IDetailAccountModal {
   isModalOpen?: boolean;
@@ -33,7 +34,7 @@ const DetailAccountModal = (props: IDetailAccountModal) => {
   const [loading, setLoading] = useState(false);
 
   const { region } = useRegion();
-  const router = useRouter()
+  const router = useRouter();
 
   const { currentUser } = useGetCurrentUser(userId!) as any;
   const dateJoinFormat = moment(currentUser?.createdAt).format(
@@ -45,6 +46,18 @@ const DetailAccountModal = (props: IDetailAccountModal) => {
   //Call when user cancel modal or click X button:
   const handleCancelModal = () => {
     onCloseModal();
+  };
+
+  const getIconStyle = (backgroundImg: string) => {
+    return {
+      backgroundColor: "black",
+      flexShrink: 0,
+      width: "24px",
+      height: "24px",
+      marginRight: "10px",
+      "-webkit-mask-size": "contain",
+      "-webkit-mask-image": backgroundImg,
+    };
   };
 
   useEffect(() => {
@@ -93,14 +106,26 @@ const DetailAccountModal = (props: IDetailAccountModal) => {
             <div className="option-list">
               {optionList.map((item, index) => (
                 <div key={index} className="option-item">
-                  <div className={item?.classname}></div>
+                  {item?.backgroundImg ? (
+                    <div style={getIconStyle(item?.backgroundImg)}></div>
+                  ) : (
+                    <Image
+                      src="/images/user/no_avatar.png"
+                      alt="no-img"
+                      width={24}
+                      height={24}
+                    />
+                  )}
 
                   <div className="info">
                     <Text className="title">{item?.label}</Text>
                     {item?.data ? (
                       <Text className="data">{item?.data}</Text>
                     ) : (
-                      <Link target="_blank" href="//chrome://settings/content/location">
+                      <Link
+                        target="_blank"
+                        href="//chrome://settings/content/location"
+                      >
                         Please enable location services for this app
                       </Link>
                     )}

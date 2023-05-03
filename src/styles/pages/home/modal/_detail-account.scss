@@ -68,28 +68,6 @@
               display: flex;
               align-items: center;
 
-              .icon {
-                -webkit-mask-size: contain;
-                background-color: rgb(38, 38, 38);
-                flex-shrink: 0;
-                width: 24px;
-                height: 24px;
-                box-sizing: border-box;
-                margin-right: 10px;
-
-                &--dateJoined {
-                  -webkit-mask-image: url("/images/post/dateJoin-icon.png");
-                }
-
-                &--basedIn {
-                  -webkit-mask-image: url("/images/post/basedIn-icon.png");
-                }
-
-                &--verified {
-                  -webkit-mask-image: url("/images/post/verifiedDate-icon.png");
-                }
-              }
-
               .info {
                 display: flex;
                 flex-direction: column;

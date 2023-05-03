@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useRef } from "react";
+import React, { FC, useEffect, useState, useMemo } from "react";
 import HomeReels from "./HomeReels";
 import PostItem from "./PostItem";
 import { useSession } from "next-auth/react";
@@ -6,11 +6,11 @@ import {
   useGetCurrentUser,
   useGetCurrentPost,
   useGetAllUser,
-  useGetAllComment
+  useGetAllComment,
 } from "@/pages/login/hooks";
 import { useUserAction, useLoginMethod } from "@/store/user/selector";
 import { useAllPostAction, useAllPost } from "@/store/post/selector";
-import { useAllCommentAction } from '@/store/comment/selector';
+import { useAllCommentAction } from "@/store/comment/selector";
 import { LOGIN_TYPE, LIMIT_DEFAULT, OFF_SET_DEFAULT } from "@/constant";
 import Loading from "@/components/Loading";
 import PostSkeleton from "@/components/AppSkeleton/PostSkeleton";
@@ -21,7 +21,6 @@ import SeeAll from "./components/SeeAll";
 
 const HomeMain: FC = () => {
   const [mounted, setMounted] = useState(false);
-  const [allPostHome, setAllPostHome] = useState<any>([]);
   const [hasMore, setHasMore] = useState(true);
   const [limit, setLimit] = useState(LIMIT_DEFAULT);
 
@@ -35,30 +34,38 @@ const HomeMain: FC = () => {
   const allPost = useAllPost();
   const { currentPost, isLoading: loadingPost, total } = useGetCurrentPost();
 
-  const { allComment, isLoading } = useGetAllComment()
+  const { allComment, isLoading } = useGetAllComment();
 
   const handleSetUserDetail = useUserAction();
   const handleSetAllPost = useAllPostAction();
   const handleSetAllComment = useAllCommentAction();
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  //List post to render interface:
+  const postRender: any = useMemo(() => {
+    if (!allPost) return;
+
+    return allPost.slice(0, limit);
+  }, [allPost, limit]);
+
+  useEffect(() => {
+    if (!currentPost) return;
+
+    handleSetAllPost(currentPost);
+  }, [currentPost]);
+
   //Add more post to current list:
   const fetchMoreData = () => {
     setTimeout(() => {
-      if (allPostHome?.length >= total!) {
+      if (postRender?.length >= total!) {
         setHasMore(false);
         return;
       } else setLimit((prev) => prev + OFF_SET_DEFAULT);
     }, 1500);
   };
-
-  //Set current list:
-  useEffect(() => {
-    setAllPostHome(allPost.slice(0, limit));
-  }, [allPost, limit]);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   //Add user to list user if donn't already exist:
   useEffect(() => {
@@ -104,21 +111,18 @@ const HomeMain: FC = () => {
   }, [currentUser, handleSetUserDetail, image, method, rest]);
 
   useEffect(() => {
-    if (!currentPost) return;
+    if (!allComment) return;
 
-    handleSetAllPost(currentPost);
-  }, [currentPost, handleSetAllPost]);
-
-  useEffect(() => {
-    if(!allComment) return
-
-    if(allComment) handleSetAllComment(allComment)
-  }, [allComment])
-
+    if (allComment) handleSetAllComment(allComment);
+  }, [allComment]);
 
   const renderListPost = () => {
     if (loadingPost) {
-      return <div className="loading-skeleton"><PostSkeleton /></div>;
+      return (
+        <div className="loading-skeleton">
+          <PostSkeleton />
+        </div>
+      );
     } else {
       // if (allPost && allPost.length === 0)
       //   return (
@@ -131,12 +135,11 @@ const HomeMain: FC = () => {
       //       more...
       //     </div>
       //   );
-      return allPostHome?.map((item: any, index: any) => (
-        <PostItem key={index} {...item} />
-      ));
+      return postRender
+        .slice(0, limit)
+        ?.map((item: any, index: any) => <PostItem key={index} {...item} />);
     }
   };
-  
 
   return (
     <div className="homemain">
@@ -145,11 +148,11 @@ const HomeMain: FC = () => {
       {mounted && (
         <div id="scrollableDiv" className="posts-list">
           <InfiniteScroll
-            dataLength={allPostHome?.length}
+            dataLength={postRender.slice(0, limit)?.length}
             next={fetchMoreData}
             hasMore={hasMore}
             loader={
-              allPostHome?.length ? (
+              postRender.slice(0, limit)?.length ? (
                 <div className="post-loader">
                   <Loading />
                 </div>

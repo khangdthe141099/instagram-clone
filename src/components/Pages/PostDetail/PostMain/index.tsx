@@ -29,10 +29,15 @@ import PostSkeleton from "@/components/AppSkeleton/PostSkeleton";
 import OptionPost from "@/components/Pages/Home/Modal/OptionModal";
 import { useAllPost } from "@/store/post/selector";
 import { TYPE_OPTION_MODAL } from "@/constant";
+import { useFocus } from "@/hooks/useFocus";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const { Text } = Typography;
 
-function PostMain() {
+function PostMain(props: any) {
+  const { currentPost } = props;
+
   const { open: openModal, onOpenModal, onCloseModal } = useModal();
 
   const {
@@ -50,7 +55,7 @@ function PostMain() {
   const [likeCount, setLikeCount] = useState<any>(null);
   const [listUserLike, setListUserLike] = useState<any>([]);
 
-  const [currentPost, setCurrentPost] = useState<any>([]);
+  const { inputRef, setFocus } = useFocus();
 
   const route = useRouter();
   const { postId } = route.query;
@@ -70,34 +75,30 @@ function PostMain() {
   const owner = isOwner(currentPost, userDetail);
   const dateFormat = moment(currentPost?.updatedAt).format(MONTH_DATE_FORMAT);
 
-  //First render:
-  useEffect(() => {
-    const crrPost = allPost.find((item: any) => item?._id === postId);
-
-    setCurrentPost(crrPost);
-  }, [allPost, postId]);
-
   //============START ON OFF HIDE LIKE COUNT AND COMMENT ========
-  const initialState = allPost.map((item: any, index: string) => ({
-    postId: item._id,
-    status: true,
-  }));
+  const getInitState = () => {
+    return allPost.map((item: any, index: string) => ({
+      postId: item._id,
+      status: true,
+    }));
+  };
 
-  const initialState1 = allPost.map((item: any, index: string) => ({
-    postId: item._id,
-    status: true,
-  }));
+  const initialState = getInitState();
+  const initialState1 = getInitState();
 
-  const [displayLikeCount, setDisplayLikeCount] = useState<any>(initialState);
-  const [displayComment, setDisplayComment] = useState<any>(initialState1);
+  const [displayLikeCount, setDisplayLikeCount] = useState<any>();
+  const [displayComment, setDisplayComment] = useState<any>();
 
   useEffect(() => {
-    setDisplayLikeCount(
-      initialState || JSON.parse(localStorage.getItem("likeCount")!)
-    );
-    setDisplayComment(
-     initialState1 || JSON.parse(localStorage.getItem("displayCmt")!)
-    );
+    const likeStorage = JSON.parse(localStorage.getItem("likeCount")!);
+    const commentStorage = JSON.parse(localStorage.getItem("displayCmt")!);
+
+    likeStorage
+      ? setDisplayLikeCount(likeStorage)
+      : setDisplayLikeCount(initialState);
+    commentStorage
+      ? setDisplayComment(commentStorage)
+      : setDisplayComment(initialState1);
   }, [allPost]);
 
   const getCoresspondingComment = () => {
@@ -251,6 +252,14 @@ function PostMain() {
     }
 
     if (key === ACTION_KEY.COMMENT) {
+      const comment = getCoresspondingComment();
+
+      if (!comment.status) {
+        toast("Please turn on comment !");
+        return;
+      }
+
+      setFocus();
     }
   };
 
@@ -416,6 +425,7 @@ function PostMain() {
                 <div className="postmain-comment">
                   <form onSubmit={handlePostComment}>
                     <input
+                      ref={inputRef}
                       value={commentText}
                       onChange={handleCommentChange}
                       placeholder="Add a comment..."

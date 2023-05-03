@@ -10,32 +10,25 @@ import { useAllPost } from "@/store/post/selector";
 const { Text } = Typography;
 
 function RelatedPosts(props: any) {
-  const { setFakeLoading } = props;
+  const { setFakeLoading, currentPost } = props;
 
   const [listPost, setListPosts] = useState<any>([]);
-  const [currentPost, setCurrentPost] = useState<any>([]);
 
   const allPost = useAllPost();
-
-  const route = useRouter();
-  const { postId } = route.query;
   const { currentUser } = useGetCurrentUser(currentPost?.userId) as any;
 
   const { isLoading: postLoading } = useGetPostByUserId(currentUser?.email);
 
-  useEffect(() => {
-    const crrPost = allPost.find((item: any) => item?._id === postId);
-
-    setCurrentPost(crrPost);
-  }, [allPost, postId]);
-
+  //Get all post trừ post hiển thị chính:
   useEffect(() => {
     const lstPost = allPost.filter(
-      (item: any) => item.userId == currentUser?.email
+      (item: any) =>
+        item.userId === currentUser?.email && item?._id !== currentPost?._id
     );
 
     setListPosts(lstPost);
   }, [allPost, currentUser?.email]);
+
 
   return (
     <div className="relatedposts">

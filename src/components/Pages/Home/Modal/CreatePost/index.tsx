@@ -104,6 +104,28 @@ const CreatePost = (props: ICreatePost) => {
     setFileList([]);
   };
 
+  const handleDisplayLikeAndComment = (post: any) => {
+    if (!post) return;
+
+    if (post) {
+      const likeStorage = JSON.parse(localStorage.getItem("likeCount")!);
+      const commentStorage = JSON.parse(localStorage.getItem("displayCmt")!);
+
+      likeStorage.push({
+        postId: post._id,
+        status: true,
+      });
+
+      commentStorage.push({
+        postId: post._id,
+        status: true,
+      });
+
+      localStorage.setItem("likeCount", JSON.stringify(likeStorage));
+      localStorage.setItem("displayCmt", JSON.stringify(commentStorage));
+    }
+  };
+
   const handleCreatePost = async () => {
     if (!captionValue || fileList?.length === 0) {
       toast(TOAST_TEXT.CREATE_POST.ERROR_NULL);
@@ -122,7 +144,7 @@ const CreatePost = (props: ICreatePost) => {
       })
       .then((res: any) => {
         handleResetValue();
-        
+
         currentPost.push(res?.data?.post);
         sortCurrenPost(currentPost);
 
@@ -130,6 +152,8 @@ const CreatePost = (props: ICreatePost) => {
 
         onCloseCreatePost();
 
+        //Add thêm 1 thằng display cmt và like count khi tạo mới post:
+        handleDisplayLikeAndComment(res?.data?.post);
 
         toast(TOAST_TEXT.CREATE_POST.SUCCESS);
         setLoading(false);

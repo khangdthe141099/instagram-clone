@@ -34,6 +34,7 @@ function PostItem(props: IPostItem) {
     setCmtLength(comment?.length || 0);
   }, [comments, postId]);
 
+
   return (
     <div onClick={handleClickPost} className="post-item">
       <Image
@@ -41,8 +42,18 @@ function PostItem(props: IPostItem) {
         width={309}
         height={309}
         src={postUrl?.[0]?.thumbUrl}
-        alt={"post item"}
+        alt="post item"
       />
+
+      {postUrl?.length > 1 && (
+        <Image
+          className="carousel"
+          width={22}
+          height={22}
+          src={"/svg/components/post/Carousel.svg"}
+          alt="carousel"
+        />
+      )}
 
       <div className="mask">
         <div className="mask--item">
