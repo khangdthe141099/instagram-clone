@@ -1,20 +1,93 @@
 .profile-detail {
-    width: 100%;
-    min-height: 150px;
+  width: 100%;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 44px;
+
+  &--left {
+    width: 292px;
+    height: auto;
     display: flex;
     align-items: center;
-    margin-bottom: 44px;
+    justify-content: center;
+    margin-right: 30px;
+  }
 
-    &--left {
-        width: 292px;
-        height: auto;
+  &--right {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .action {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+
+      .username {
+        font-size: 20px;
+        line-height: 25px;
+        font-weight: 400;
+        margin-right: 20px;
+      }
+
+      &--list-owner {
         display: flex;
         align-items: center;
-        justify-content: center;
-        margin-right: 30px;
+      }
+
+      &--list-guest {
+        display: flex;
+        align-items: center;
+
+        .btn {
+          margin: 0 10px;
+        }
+      }
     }
 
-    &--right {
-      
+    .statistic {
+      width: 100%;
+      display: flex;
+      margin-bottom: 20px;
+
+      &--group {
+        display: flex;
+        align-items: center;
+        margin-right: 40px;
+
+        .number {
+          font-size: 16px;
+          line-height: 20px;
+          font-weight: 600;
+          margin-right: 5px;
+        }
+
+        .label {
+          font-size: 16px;
+          line-height: 20px;
+          font-weight: 400;
+        }
+      }
     }
+
+    .infor {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .name {
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 600;
+      }
+
+      .desc {
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 400;
+      }
+    }
+  }
 }

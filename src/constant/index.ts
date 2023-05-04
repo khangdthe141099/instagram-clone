@@ -69,6 +69,12 @@ export const HTTP_METHOD = {
   DELETE: "DELETE",
 };
 
+export const FOLLOW_TYPE = {
+  FOLLOW: 'follow',
+  FOLLOWING: 'following',
+  REQUESTED: 'requested',
+}
+
 export const LENGTH_CONSTANTS = {
   DEFAULT_PAGE: 1,
   DEFAULT_TOTAL: 0,

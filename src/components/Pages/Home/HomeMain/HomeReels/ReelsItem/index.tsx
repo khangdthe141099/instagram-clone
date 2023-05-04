@@ -1,19 +1,31 @@
 import type { FC } from "react";
 import { Tooltip } from "antd";
-import Avatar from '@/components/Avatar'
+import Avatar from "@/components/Avatar";
 
 interface IReelsItem {
   img?: any;
   name?: string;
+  circleWidth?: any;
+  circleHeight?: number;
 }
 
-const ReelsItem: FC = (props: IReelsItem) => {
-
+const ReelsItem = ({
+  img,
+  name,
+  circleWidth = 56,
+  circleHeight = 56,
+}: IReelsItem) => {
   return (
     <section className="avatar-detail">
-      <Avatar img={props.img} ringWidth={60} ringHeight={60} width={56} height={56}/>
-      <Tooltip title={props.name}>
-        <p className="avatar-name">{props.name}</p>
+      <Avatar
+        img={img}
+        ringWidth={circleWidth + 4}
+        ringHeight={circleHeight + 4}
+        width={circleWidth}
+        height={circleHeight}
+      />
+      <Tooltip title={name}>
+        <p className="avatar-name">{name}</p>
       </Tooltip>
     </section>
   );

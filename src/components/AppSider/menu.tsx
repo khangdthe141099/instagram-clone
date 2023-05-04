@@ -3,8 +3,8 @@ import { Image, Avatar } from "antd";
 import { ROUTES } from "@/constant/routes";
 import { useSession, signIn, signOut, getSession } from "next-auth/react";
 import { PoweroffOutlined, UserOutlined } from "@ant-design/icons";
-import usePostStore from '@/store/post/usePostStore'
-import useUserStore from '@/store/user/useUserStore'
+import usePostStore from "@/store/post/usePostStore";
+import useUserStore from "@/store/user/useUserStore";
 
 const avatarStyle = {
   width: "26px",
@@ -17,17 +17,17 @@ const avatarStyle = {
 
 export const getMenuSider = (
   selectedKey: any,
-  profileImg: string,
+  user: any,
   onOpenCreatePost: any
-)   => {
-  const postStore = usePostStore as any
-  const userStore = useUserStore as any
+) => {
+  const postStore = usePostStore as any;
+  const userStore = useUserStore as any;
 
   const handleLogout = () => {
-    signOut()
-    postStore.persist.clearStorage() 
-    userStore.persist.clearStorage()
-  }
+    signOut();
+    postStore.persist.clearStorage();
+    userStore.persist.clearStorage();
+  };
 
   const renderIcon = (item: any) => {
     const { key } = item;
@@ -35,8 +35,10 @@ export const getMenuSider = (
     if (key === "profile") {
       return (
         <Avatar
-          src={profileImg ? profileImg : "/images/user/no_avatar.png"}
-          icon={!profileImg ? <UserOutlined /> : false}
+          src={
+            user?.profileImg ? user?.profileImg : "/images/user/no_avatar.png"
+          }
+          icon={!user?.profileImg ? <UserOutlined /> : false}
           alt={item.key}
           style={avatarStyle}
         />
@@ -71,6 +73,19 @@ export const getMenuSider = (
         >
           {item.label}
         </div>
+      );
+    } else if (key === "profile") {
+      return (
+        <Link
+          style={
+            selectedKey === item.key
+              ? { fontWeight: "700" }
+              : { fontWeight: "400" }
+          }
+          href={`/profile/${user?.email}`}
+        >
+          {item.label}
+        </Link>
       );
     } else {
       return (

@@ -1,14 +1,16 @@
 @import "./profile-detail";
 @import "./profile-gallery";
+@import "./edit";
 
 .profile {
-    width: 100%;
-    min-height: 100vh;
-    background-color: $color_white;
-    margin-left: auto;
-    padding: 30px 170px;
+  width: 100%;
+  min-height: 100vh;
+  background-color: $color_white;
+  margin-left: auto;
+  padding: 30px 170px;
 
-    .profile-reels {
-        width: 935px;
-    }
+  .profile-reels {
+    width: 910px;
+    margin-bottom: 44px;
+  }
 }

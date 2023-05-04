@@ -2,10 +2,10 @@ import Image from "next/image";
 import classNames from "classnames";
 interface AvatarProps {
   img?: any;
-  ringWidth?: number;
-  ringHeight?: number;
-  width?: number;
-  height?: number;
+  ringWidth?: number | any;
+  ringHeight?: number | any;
+  width?: number | any;
+  height?: number | any;
   stories?: string[] | number[];
 }
 

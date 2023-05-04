@@ -1,0 +1,132 @@
+.editprofile {
+  width: 100%;
+
+  .editpage {
+    width: 100%;
+    margin-top: 50px;
+    margin-left: 50px;
+
+    .head-title {
+      font-size: 24px;
+      line-height: 27px;
+      font-weight: 400;
+    }
+
+    .main {
+      margin-top: 50px;
+      width: 100%;
+
+      .group {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+
+        .avatar-wrapper {
+          .ant-upload-wrapper {
+            .ant-upload-list {
+              .ant-upload {
+                width: 140px;
+                height: 140px;
+
+                & > span {
+                  display: flex;
+                  flex-direction: column;
+                  line-height: 17px;
+                  font-weight: 400;
+                  color: rgb(0, 0, 0);
+                  font-size: 12px;
+                  font-family: $font-family-system;
+                  margin-top: 5px;
+                }
+              }
+
+              .ant-upload-list-item-container {
+                width: 140px;
+                height: 140px;
+              }
+            }
+          }
+        }
+
+        .title {
+          font-size: 16px;
+          line-height: 20px;
+          font-weight: 600;
+        }
+
+        .area-wrap {
+          display: flex;
+          flex-direction: column;
+          margin-left: 48px;
+
+          .bio {
+            width: 355px;
+            height: 86px;
+            resize: vertical;
+            padding: 6px 10px;
+          }
+
+          .count-text {
+            margin-top: 7px;
+          }
+        }
+
+        .switch {
+          margin-left: 22px;
+        }
+
+        .info {
+          display: flex;
+          flex-direction: column;
+          margin-left: 30px;
+
+          .name {
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 400;
+          }
+
+          .change-photo {
+            font-size: 14px;
+            line-height: 18px;
+            color: #0095f6;
+            font-weight: 600;
+            cursor: pointer;
+          }
+        }
+      }
+
+      .btn-wrapper {
+        display: flex;
+        align-items: center;
+
+        .btn {
+          font-weight: 600;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+
+          &:hover {
+            opacity: 0.8;
+          }
+
+          &--submit {
+            background-color: #0095f6;
+            color: #ffffff;
+            width: 77px;
+            height: 32px;
+          }
+
+          &--back {
+            background-color: #EFEFEF;
+            width: 120px;
+            height: 32px;
+            border: 1px solid black;
+            margin-left: 10px;
+          }
+        }
+      }
+    }
+  }
+}

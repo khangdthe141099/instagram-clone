@@ -44,7 +44,7 @@ const Sider: FC = () => {
   }, []);
 
   useEffect(() => {
-    const menu = getMenuSider(selectedKey, user?.profileImg, onOpenCreatePost);
+    const menu = getMenuSider(selectedKey, user, onOpenCreatePost);
 
     if (user) {
       setMenu(menu as any);

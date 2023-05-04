@@ -2,7 +2,19 @@ import { FC, useRef, useEffect, useState, useCallback } from "react";
 import ReelsItem from "./ReelsItem";
 import { reels } from "./data";
 
-const HomeReels: FC = () => {
+interface IHomeReels {
+  circleWidth?: number;
+  circleHeight?: number;
+  arrowToTop?: number | string;
+  arrowToLeft?: number | string;
+}
+
+const HomeReels = ({
+  circleWidth,
+  circleHeight,
+  arrowToLeft = 10,
+  arrowToTop = 30,
+}: IHomeReels) => {
   const initialArrow = {
     arrowLeft: true,
     arrowRight: true,
@@ -25,6 +37,7 @@ const HomeReels: FC = () => {
       setCarouseState((prev) => prev + 400);
     }
 
+    //Khi vị trí thanh cuộn ở giữa thì set hiển thị cả 2 arrow:
     if (carouseState !== 0) {
       setArrowDisplay({ ...initialArrow });
     }
@@ -49,7 +62,7 @@ const HomeReels: FC = () => {
   return (
     <section className="check">
       {arrowDisplay.arrowLeft && (
-        <div className="arrow-btn left-icon">
+        <div style={{ top: arrowToTop, left: arrowToLeft }} className="arrow-btn">
           <div
             onClick={() => handleSlide("left")}
             className="icon-inside icon-inside--left"
@@ -57,7 +70,7 @@ const HomeReels: FC = () => {
         </div>
       )}
       {arrowDisplay.arrowRight && (
-        <div className="arrow-btn right-icon">
+        <div style={{ top: arrowToTop, right: arrowToLeft }} className="arrow-btn">
           <div
             onClick={() => handleSlide("right")}
             className="icon-inside icon-inside--right"
@@ -66,7 +79,14 @@ const HomeReels: FC = () => {
       )}
       <div ref={carouselRef} className="carousel-body">
         {reels.map((item, index) => {
-          return <ReelsItem key={index} {...item} />;
+          return (
+            <ReelsItem
+              key={index}
+              {...item}
+              circleWidth={circleWidth}
+              circleHeight={circleHeight}
+            />
+          );
         })}
       </div>
     </section>

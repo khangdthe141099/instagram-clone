@@ -1,0 +1,21 @@
+.normal-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        opacity: .8;
+    }
+
+    .arrow {
+        transform: rotate(180deg);
+        margin-top: 3px;
+        margin-left: 3px;
+    }
+}
