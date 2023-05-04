@@ -25,8 +25,6 @@ function Edit() {
 
   const activeUser = useUserDetail();
 
-  console.log("activeUser", activeUser);
-
   const onChangeSwitch = (checked: boolean) => {
     setIsPrivate(checked);
   };
