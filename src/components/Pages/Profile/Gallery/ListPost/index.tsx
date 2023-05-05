@@ -9,8 +9,6 @@ function ListPost(props: any) {
   const [mounted, setMounted] = useState(false);
   const allPost = useAllPost();
 
-  console.log('allPost', allPost)
-
   useEffect(() => {
     setMounted(true);
   }, []);

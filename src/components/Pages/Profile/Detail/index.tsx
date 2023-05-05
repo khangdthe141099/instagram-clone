@@ -8,19 +8,32 @@ import Loading from "@/components/Loading";
 import Follow from "./components/Follow";
 import { useRouter } from "next/router";
 import { useUserDetail } from "@/store/user/selector";
+import { useModal } from "@/hooks/useModal";
+import OwnSettingModal from "./Modal/OwnSetting";
 
 const { Text } = Typography;
 
-function Detail() {
+interface IDetail {
+  owner?: boolean;
+  user?: any;
+}
+
+function Detail(props: IDetail) {
+  const [mounted, setMounted] = useState(false);
+
+  const { owner, user } = props;
+
   const route = useRouter();
-  const { username } = route.query;
 
-  const [owner, setOwner] = useState(true);
-  const activeUser = useUserDetail();
+  const {
+    open: openOwnSetting,
+    onOpenModal: onOpenOwnSetting,
+    onCloseModal: onCloseOwnSetting,
+  } = useModal();
 
-  useEffect(() => {
-    setOwner(activeUser?.email === username);
-  }, [activeUser, username]);
+  const handleClickOwnSetting = () => {
+    onOpenOwnSetting();
+  };
 
   const renderAction = () => {
     if (owner) {
@@ -34,19 +47,21 @@ function Detail() {
               text="Edit profile"
             />
           </div>
-          <Image
-            style={{ marginLeft: 15, cursor: "pointer" }}
-            width={24}
-            height={24}
-            src="/svg/components/post/ProfileOptions.svg"
-            alt="profile options"
-          />
+          <div onClick={handleClickOwnSetting}>
+            <Image
+              style={{ marginLeft: 15, cursor: "pointer" }}
+              width={24}
+              height={24}
+              src="/svg/components/post/ProfileOptions.svg"
+              alt="profile options"
+            />
+          </div>
         </div>
       );
     } else {
       return (
         <div className="action--list-guest">
-          <Follow />
+          <Follow user={user}/>
 
           <div className="btn">
             <NormalButton width={88} height={32} text="Message" />
@@ -63,46 +78,59 @@ function Detail() {
     }
   };
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
-    <div className="profile-detail">
-      <div className="profile-detail--left">
-        <Avatar
-          img="https://i.pinimg.com/736x/71/fe/83/71fe83b3f2423bb24a925ff72565fd0e.jpg"
-          width={150}
-          height={150}
-          stories={[]}
-        />
-      </div>
-
-      <div className="profile-detail--right">
-        <div className="action">
-          <Text className="username">KhangDT</Text>
-          {renderAction()}
-        </div>
-
-        <div className="statistic">
-          <div className="statistic--group">
-            <Text className="number">856</Text>
-            <Text className="label">posts</Text>
+    <>
+      {mounted && (
+        <div className="profile-detail">
+          <div className="profile-detail--left">
+            <Avatar
+              img={user?.profileImg}
+              width={150}
+              height={150}
+              stories={[]}
+            />
           </div>
 
-          <div className="statistic--group">
-            <Text className="number">100k</Text>
-            <Text className="label">followers</Text>
-          </div>
+          <div className="profile-detail--right">
+            <div className="action">
+              <Text className="username">{user?.username || user?.email}</Text>
+              {renderAction()}
+            </div>
 
-          <div className="statistic--group">
-            <Text className="number">9</Text>
-            <Text className="label">following</Text>
+            <div className="statistic">
+              <div className="statistic--group">
+                <Text className="number">856</Text>
+                <Text className="label">posts</Text>
+              </div>
+
+              <div className="statistic--group">
+                <Text className="number">100k</Text>
+                <Text className="label">followers</Text>
+              </div>
+
+              <div className="statistic--group">
+                <Text className="number">9</Text>
+                <Text className="label">following</Text>
+              </div>
+            </div>
+
+            <div className="infor">
+              <Text className="name">Dam Tuan Khang</Text>
+              <Text className="desc">Tặng giày mỗi ngày ♥️</Text>
+            </div>
           </div>
         </div>
-
-        <div className="infor">
-          <Text className="name">Dam Tuan Khang</Text>
-          <Text className="desc">Tặng giày mỗi ngày ♥️</Text>
-        </div>
-      </div>
-    </div>
+      )}
+      <OwnSettingModal
+        isModalOpen={openOwnSetting}
+        onCloseOwnSetting={onCloseOwnSetting}
+        user={user}
+      />
+    </>
   );
 }
 

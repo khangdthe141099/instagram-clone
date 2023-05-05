@@ -4,7 +4,7 @@ import { commentService } from '@/services/commentService';
 import { useEffect, useState } from "react";
 import { HTTP_STATUS_CONSTANTS } from "@/constant";
 
-export const useGetCurrentUser = (userId: string) => {
+export const useGetCurrentUser = (userId: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState([]);
 

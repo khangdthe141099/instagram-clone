@@ -7,6 +7,12 @@ import { getBase64 } from "@/utils";
 import Image from "next/image";
 import { useUserDetail } from "@/store/user/selector";
 import { useRouter } from "next/router";
+import { userService } from "@/services/userService";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Loading from "@/components/Loading";
+import { useUserAction, useLoginMethod } from "@/store/user/selector";
+import { LOGIN_TYPE } from "@/constant";
 
 const { Text } = Typography;
 
@@ -21,9 +27,13 @@ function Edit() {
   const [bio, setBio] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
 
   const activeUser = useUserDetail();
+  const handleSetUserDetail = useUserAction();
+  const method = useLoginMethod();
 
   const onChangeSwitch = (checked: boolean) => {
     setIsPrivate(checked);
@@ -34,7 +44,33 @@ function Edit() {
 
     setBio(event.target.value);
   };
-  console.log("bio", bio);
+
+
+  const handleUpdateUser = () => {
+    const userId = activeUser?._id;
+    setLoading(true);
+
+    if (userId) {
+      userService
+        .updateUserInfo(userId, {
+          profileImg: fileList?.[0]?.thumbUrl || "",
+          bio: bio,
+          is_private: isPrivate,
+        })
+        .then(async (res: any) => {
+          const user = res?.data?.user;
+          handleSetUserDetail(user);
+
+          toast("Update user information successfully !");
+          setLoading(false);
+        })
+        .catch((err) => {
+          setLoading(false);
+          toast("Update user information failed !");
+          console.log("loi:>", err);
+        });
+    }
+  };
 
   useEffect(() => {
     setFileList([
@@ -42,7 +78,7 @@ function Edit() {
         uid: "1",
         name: "avatar.png",
         status: "done",
-        url: activeUser?.profileImg,
+        thumbUrl: activeUser?.profileImg,
       },
     ]);
     setBio(activeUser?.bio && activeUser?.bio);
@@ -150,13 +186,15 @@ function Edit() {
               className="switch"
               checkedChildren="ON"
               unCheckedChildren="OFF"
-              defaultChecked
+              checked={isPrivate}
               onChange={onChangeSwitch}
             />
           </div>
 
           <div className="btn-wrapper">
-            <button className="btn btn--submit">Submit</button>
+            <button onClick={handleUpdateUser} className="btn btn--submit">
+              {loading ? <Loading width={20} height={20} /> : "Submit"}
+            </button>
             <button
               onClick={() => router.push(`/profile/${activeUser?.email}`)}
               className="btn btn--back"
@@ -166,6 +204,7 @@ function Edit() {
           </div>
         </main>
       )}
+      <ToastContainer />
     </div>
   );
 }

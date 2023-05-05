@@ -6,10 +6,16 @@ import Image from "next/image";
 import { FOLLOW_TYPE } from "@/constant";
 import Loading from "@/components/Loading";
 
-interface IFollow {}
+interface IFollow {
+  user?: any;
+}
 
 function Follow(props: IFollow) {
-  const privateAccount = false;
+  const { user } = props; //User của bài Post hiện tại
+  const { is_private } = user;
+
+  console.log("hehe", user);
+
   const [followType, setFollowType] = useState(FOLLOW_TYPE.FOLLOW);
   const [loading, setLoading] = useState(false);
 
@@ -19,7 +25,7 @@ function Follow(props: IFollow) {
       setTimeout(() => {
         setLoading(false);
 
-        privateAccount
+        is_private
           ? setFollowType(FOLLOW_TYPE.REQUESTED)
           : setFollowType(FOLLOW_TYPE.FOLLOWING);
       }, 1000);

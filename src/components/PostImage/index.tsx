@@ -88,7 +88,6 @@ const PostImage = (props: PostImageProps) => {
     setLiked((prev: any) => !prev);
 
     const idx = checkExistLike(currentPost?.likes);
-    console.log('idx', idx)
 
     if (idx === -1) setLikeCount((prev: any) => prev + 1);
     else setLikeCount((prev: any) => prev - 1);

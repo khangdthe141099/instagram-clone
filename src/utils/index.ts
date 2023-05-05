@@ -79,7 +79,6 @@ export const useWindowSize = () => {
 };
 
 export const smoothScrollToRef = (ref?: any, range = 0) => {
-  console.log('hehe', ref)
   if (typeof window !== UNDEFINED) {
     window.scrollTo({
       top: ref?.current?.offsetTop + range,

@@ -6,13 +6,38 @@ class UserService {
   }
 
   getUserByEmail(params?: string) {
-    if(!params) return;
+    if (!params) return;
 
     return publicRequest.get(`/api/user/${params}`);
   }
 
-  getAllUser(){
+  getAllUser() {
     return publicRequest.get(`/api/user/find`);
+  }
+
+  //Cập nhật thông tin user
+  updateUserInfo(id: string, params?: any) {
+    return publicRequest.patch(`/api/user/${id}`, params);
+  }
+
+  //Cập nhật list follower
+  updateFollower(id: string, params?: any) {
+    return publicRequest.patch(`/api/user/follower/${id}`, params);
+  }
+
+  //Chuyển trạng thái từ request sang accpet (đối với private account)
+  acceptFollowerPrivateAcc(id: string, params?: any) {
+    return publicRequest.patch(`/api/user/accept/follower/${id}`, params);
+  }
+
+    //Chuyển trạng thái từ request sang accpet (đối với private account)
+  acceptFollowingPrivateAcc(id: string, params?: any) {
+    return publicRequest.patch(`/api/user/accept/following/${id}`, params);
+  }
+
+  //Cập nhật list following
+  updateFollowing(id: string, params?: any) {
+    return publicRequest.patch(`/api/user/following/${id}`, params);
   }
 }
 

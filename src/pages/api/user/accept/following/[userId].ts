@@ -12,11 +12,7 @@ export default async function handler(
 
   const { userId }: any = req.query;
 
-  if (req.method === HTTP_METHOD.GET) {
-    Users.findOne({ email: userId })
-      .then((data) => res.status(200).json({ user: data }))
-      .catch();
-  } else if (req.method === HTTP_METHOD.PATCH) {
+  if (req.method === HTTP_METHOD.PATCH) {
     Users.findByIdAndUpdate({ _id: userId }, req.body, {
       new: true,
     })
