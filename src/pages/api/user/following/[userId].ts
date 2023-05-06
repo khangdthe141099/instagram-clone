@@ -13,9 +13,15 @@ export default async function handler(
   const { userId }: any = req.query;
 
   if (req.method === HTTP_METHOD.PATCH) {
-    Users.findByIdAndUpdate({ _id: userId }, req.body, {
-      new: true,
-    })
+    Users.findByIdAndUpdate(
+      { _id: userId },
+      {
+        $push: req.body,
+      },
+      {
+        new: true,
+      }
+    )
       .sort({ createdAt: -1 })
       .then((data) => res.status(200).json({ user: data }))
       .catch((err) => console.log("loi:>", err));

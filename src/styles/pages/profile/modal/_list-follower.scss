@@ -1,0 +1,29 @@
+.list-follower-modal-container{
+    width: 100%;
+    .ant-modal {
+      width: 100%;
+      .ant-modal-content {
+        width: 100%;
+        .ant-modal-header {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+  
+        .ant-modal-body {
+          height: 100%;
+          width: 100%;
+          .list-follower-modal-wrapper {
+            height: 330px;
+            overflow: auto;
+            padding-right: 20px;
+  
+            .list-person {
+              margin-bottom: 15px;
+            }
+          }
+        }
+      }
+    }
+  }
+  

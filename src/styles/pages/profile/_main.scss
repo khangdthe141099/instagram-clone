@@ -1,7 +1,9 @@
 @import "./profile-detail";
 @import "./profile-gallery";
 @import "./edit";
-@import './modal/own-setting';
+@import "./modal/own-setting";
+@import "./modal/list-follower";
+@import "./modal/list-following";
 
 .profile {
   width: 100%;

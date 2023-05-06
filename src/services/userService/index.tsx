@@ -39,6 +39,16 @@ class UserService {
   updateFollowing(id: string, params?: any) {
     return publicRequest.patch(`/api/user/following/${id}`, params);
   }
+
+  //Hủy follower:
+  cancelFollower(id: string, params?: any) {
+    return publicRequest.patch(`/api/user/cancel/follower/${id}`, params);
+  }
+
+  //Hủy following:
+  cancelFollowing(id: string, params?: any) {
+    return publicRequest.patch(`/api/user/cancel/following/${id}`, params);
+  }
 }
 
 export const userService = new UserService();

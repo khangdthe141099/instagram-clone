@@ -10,6 +10,8 @@ import { useRouter } from "next/router";
 import { useUserDetail } from "@/store/user/selector";
 import { useModal } from "@/hooks/useModal";
 import OwnSettingModal from "./Modal/OwnSetting";
+import ListFollowerModal from "./Modal/ListFollower";
+import ListFollowingModal from "./Modal/ListFollowing";
 
 const { Text } = Typography;
 
@@ -29,6 +31,18 @@ function Detail(props: IDetail) {
     open: openOwnSetting,
     onOpenModal: onOpenOwnSetting,
     onCloseModal: onCloseOwnSetting,
+  } = useModal();
+
+  const {
+    open: openFollower,
+    onOpenModal: onOpenFollower,
+    onCloseModal: onCloseFollower,
+  } = useModal();
+
+  const {
+    open: openFollowing,
+    onOpenModal: onOpenFollowing,
+    onCloseModal: onCloseFollowing,
   } = useModal();
 
   const handleClickOwnSetting = () => {
@@ -61,18 +75,18 @@ function Detail(props: IDetail) {
     } else {
       return (
         <div className="action--list-guest">
-          <Follow user={user}/>
+          <Follow user={user} />
 
           <div className="btn">
             <NormalButton width={88} height={32} text="Message" />
           </div>
-          <Image
+          {/* <Image
             style={{ cursor: "pointer" }}
             width={32}
             height={32}
             src="/svg/MoreOption.svg"
             alt="more options"
-          />
+          /> */}
         </div>
       );
     }
@@ -107,12 +121,20 @@ function Detail(props: IDetail) {
                 <Text className="label">posts</Text>
               </div>
 
-              <div className="statistic--group">
+              <div
+                onClick={onOpenFollower}
+                style={{ cursor: "pointer" }}
+                className="statistic--group"
+              >
                 <Text className="number">100k</Text>
                 <Text className="label">followers</Text>
               </div>
 
-              <div className="statistic--group">
+              <div
+                onClick={onOpenFollowing}
+                style={{ cursor: "pointer" }}
+                className="statistic--group"
+              >
                 <Text className="number">9</Text>
                 <Text className="label">following</Text>
               </div>
@@ -129,6 +151,14 @@ function Detail(props: IDetail) {
         isModalOpen={openOwnSetting}
         onCloseOwnSetting={onCloseOwnSetting}
         user={user}
+      />
+      <ListFollowerModal
+        isModalOpen={openFollower}
+        onCloseModal={onCloseFollower}
+      />
+      <ListFollowingModal
+        isModalOpen={openFollowing}
+        onCloseModal={onCloseFollowing}
       />
     </>
   );

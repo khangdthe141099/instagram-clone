@@ -16,7 +16,7 @@ export default async function handler(
     Users.findByIdAndUpdate(
       { _id: userId },
       {
-        $push: req.body,
+        $pull: req.body,
       },
       {
         new: true,
